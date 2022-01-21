@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="<%= RUOYU.description %>" />
+        <meta name="keywords" content="<%= RUOYU.keywords %>" />
+        <meta name="apple-mobile-web-app-title" content="<%= RUOYU.appTitle %>" />
+        <title><%= RUOYU.title %></title>
+        <%_ cssList.forEach(item => { _%>
+        <link rel="stylesheet" href="/static/<%= item %>.min.css" />
+        <%_ }) _%>
+    </head>
+    <body>
+        <div class="layui-layout layui-layout-admin">
+            <div class="layui-header header">
+                <a class="logo" href="/">
+                    <img src="https://image.tnloy.cn/image/01496a40743511ec8cb45df97702b9ae.png" alt="layui" />
+                </a>
+                <ul class="layui-nav header-nav">
+                    <li class="layui-nav-item">
+                        <a href="javascript:;"><img src="<%= user.avatar %>" class="layui-nav-img" /><%= user.nickName %> </a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;">修改信息</a></dd>
+                            <dd><a href="javascript:;">安全管理</a></dd>
+                            <dd><a href="<%= account %>/out">退出</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+            <div class="layui-side layui-bg-black">
+                <div class="layui-side-scroll">
+                    <ul class="layui-nav layui-nav-tree">
+                        <% menu.forEach(item => { %>
+                        <li class="layui-nav-item<%= menuActive(item,current) %>">
+                            <a href="<%= getPath(item) %>"><%= item.menuName %></a>
+                            <% if (item.children) { %>
+                            <dl class="layui-nav-child">
+                                <% item.children.forEach(children => { %>
+                                <dd class="<%= menuActive(children,current,item) %>">
+                                    <a href="/user<%= item.path + children.path %>"><%= children.menuName %> </a>
+                                </dd>
+                                <% }) %>
+                            </dl>
+                            <% } %>
+                        </li>
+                        <% }) %>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="layui-body"><%- getBreadcrumb(menu,current) %> <%- include(`../pages/${page}`) _%></div>
+        </div>
+        <!-- 通用 -->
+        <%_ jsList.forEach(item => { _%>
+        <script src="/static/<%= item %>.min.js"></script>
+        <%_ }) _%>
+    </body>
+</html>

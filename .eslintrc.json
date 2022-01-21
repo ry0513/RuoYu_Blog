@@ -1,0 +1,18 @@
+{
+    "extends": ["alloy", "alloy/typescript"],
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "node": true
+    },
+    "globals": {
+        "$": "readonly",
+        "RUOYU": "readonly",
+        "GrowlNotification": "readonly",
+        "Qs": "readonly"
+    },
+    "rules": {
+        // 自定义你的规则
+        "@typescript-eslint/explicit-member-accessibility": "0"
+    }
+}

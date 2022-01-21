@@ -1,0 +1,41 @@
+.layui-layout-admin {
+    .header {
+        .logo {
+            position: absolute;
+            top: 16px;
+            left: 55px;
+            img {
+                width: 82px;
+                height: 31px;
+            }
+        }
+
+        .header-nav {
+            position: absolute;
+            right: 0;
+        }
+    }
+    .layui-body {
+        padding: 16px;
+    }
+    .layui-breadcrumb {
+        padding-bottom: 16px;
+    }
+}
+
+.layui-form.open {
+    padding: 20px;
+
+    .layui-form-label {
+        padding: 9px 0;
+
+        width: 60px;
+        text-align: left;
+    }
+    .layui-input-block {
+        margin-left: 70px;
+    }
+}
+.layui-table-page {
+    text-align: right;
+}

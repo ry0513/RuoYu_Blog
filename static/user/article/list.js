@@ -1,0 +1,89 @@
+layui.use("table", () => {
+    var table = layui.table;
+    table.render({
+        elem: "#article",
+        height: 500,
+        url: "/api/article/list", //数据接口
+        page: true, //开启分页
+        cols: [
+            [
+                {
+                    field: "articleId",
+                    title: "ID",
+                    width: 100,
+                },
+                {
+                    field: "title",
+                    title: "标题",
+                },
+
+                {
+                    title: "状态",
+                    width: 80,
+                    templet: ({ status }) => {
+                        switch (status) {
+                            case 0:
+                                return "草稿";
+
+                            case 1:
+                                return "审核中";
+
+                            case 2:
+                                return "发布";
+
+                            case 3:
+                                return "驳回";
+
+                            case 4:
+                                return "回收站";
+                        }
+                    },
+                },
+
+                {
+                    title: "标签",
+                    width: 200,
+                    templet: ({ tags }) => {
+                        let str = "";
+                        tags.forEach((item) => {
+                            str += `<span class="layui-badge layui-bg-green">${item.content}</span>\n`;
+                        });
+                        return str;
+                    },
+                },
+                {
+                    field: "password",
+                    title: "密码",
+                    width: 100,
+                },
+
+                {
+                    title: "创建时间",
+                    width: 160,
+                    templet: ({ createdAt }) => {
+                        return $ryTools.dayjs(createdAt);
+                    },
+                },
+
+                {
+                    title: "操作",
+                    width: 115,
+                    templet: ({ articleId }) => {
+                        return `<a href='/user/article/edit?article=${articleId}' class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>`;
+                    },
+                },
+            ],
+        ],
+    });
+    table.on("tool(article)", function (obj) {
+        var data = obj.data;
+        console.log(obj);
+        if (obj.event === "del") {
+            layer.confirm("真的删除行么", function (index) {
+                obj.del();
+                layer.close(index);
+            });
+        }
+    });
+});
