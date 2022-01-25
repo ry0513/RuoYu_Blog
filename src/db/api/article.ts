@@ -2,11 +2,12 @@ import Article from "../modles/Article";
 import Tag from "../modles/Tag";
 import Sort from "../modles/Sort";
 import TagArticle from "../modles/TagArticle";
+import { Sequelize } from "sequelize-typescript";
 
 /**
  * @description 获取文章
  */
-export const getArticle = (where: Pick<Article, "articleId" | "userId">) => {
+export const getArticle = (where: { articleId: number; userId?: number }) => {
     return Article.findOne({
         where,
         include: Tag,
@@ -20,14 +21,31 @@ export const getArticleList = (where: { userId?: number; status?: number }, offs
     return Article.findAll({
         order: [["articleId", "DESC"]],
         where,
-        include: Tag,
+        include: [Tag],
         offset,
         limit,
     });
 };
 
 /**
- * @description 获取文章数量
+ * @description 获取文章分类数量
+ */
+export const getArticleSortCount = (userId: number) => {
+    return Article.findAll({
+        where: { userId },
+        group: "status",
+        attributes: ["status", [Sequelize.fn("COUNT", Sequelize.col("status")), "count"]],
+    }).then((data) => {
+        const count: number[] = [0, 0, 0, 0];
+        data.forEach((item) => {
+            count[item.status] = item.getDataValue("count");
+        });
+        return count;
+    });
+};
+
+/**
+ * @description 获取总文章数量
  */
 export const getArticleCount = (where: { userId?: number; status?: number }) => {
     return Article.count({
@@ -52,14 +70,28 @@ export const getArticleSorts = () => {
 /**
  * @description 新增文章
  */
-export const addArticle = (data: { userId: number; title: string; html: string; content: string; sortId?: number; images?: string[]; password?: string; status?: number }) => {
+export const addArticle = (data: { userId: number; title: string; html: string; content: Array<Object>; sortId?: number; images?: string[]; password?: string; status?: number }) => {
     return Article.create(data);
 };
 
 /**
  * @description 编辑文章
  */
-export const setArticle = ({ articleId, ...data }: { articleId: number; title: string; html: string; content: string; sortId?: number; images?: string[]; password?: string; status?: number }) => {
+export const setArticle = ({
+    articleId,
+    ...data
+}: {
+    articleId: number;
+    title: string;
+    html: string;
+    content: Array<Object>;
+    sortId?: number;
+    images?: string[];
+    password?: string;
+    status?: number;
+}) => {
+    console.log();
+
     return Article.update(data, {
         where: {
             articleId,

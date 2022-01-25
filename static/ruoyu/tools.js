@@ -17,7 +17,7 @@ class Tools {
         for (const item of arr) {
             const pair = item.split("=");
             if (pair[0] === key) {
-                return pair[1];
+                return pair[1] || "";
             }
         }
         return undefined;

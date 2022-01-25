@@ -83,7 +83,7 @@ const response: ResponseFun = {
     },
 
     needLogin: (res: Response, obj: Object = {}) => {
-        res.send({ code: -1, msg: "没有找到登录信息", ...obj });
+        res.send({ code: -2, msg: "没有找到登录信息，未登录或登录过期", ...obj });
     },
     permission: (res: Response, obj: Object = {}) => {
         res.send({ code: -3, msg: "权限不足", ...obj });

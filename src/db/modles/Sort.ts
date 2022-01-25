@@ -12,7 +12,7 @@ export default class Sort extends Model {
     @Column({ type: DataType.INTEGER, comment: "标签id" })
     sortId!: number;
 
-    @Column({ type: DataType.STRING, comment: "标签内容" })
+    @Column({ type: DataType.STRING, comment: "标签名称" })
     content!: string;
 
     @ForeignKey(() => User)

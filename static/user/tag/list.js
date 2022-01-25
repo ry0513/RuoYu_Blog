@@ -3,9 +3,8 @@ const util = layui.util;
 
 table.render({
     elem: "#tags",
-    height: 500,
-    url: "/api/tag/list", //数据接口
-    page: true, //开启分页
+    url: "/api/tag/list",
+    page: true,
     cols: [
         [
             {
@@ -16,7 +15,7 @@ table.render({
 
             {
                 field: "content",
-                title: "内容",
+                title: "标签",
             },
             {
                 title: "使用次数",

@@ -8,6 +8,7 @@
         <meta name="keywords" content="<%= RUOYU.keywords %>" />
         <meta name="apple-mobile-web-app-title" content="<%= RUOYU.appTitle %>" />
         <title><%= RUOYU.title %></title>
+        <link rel="stylesheet" href="/static/layui/css/layui.min.css" />
         <%_ cssList.forEach(item => { _%>
         <link rel="stylesheet" href="/static/<%= item %>.min.css" />
         <%_ }) _%>
@@ -52,7 +53,8 @@
 
             <div class="layui-body"><%- getBreadcrumb(menu,current) %> <%- include(`../pages/${page}`) _%></div>
         </div>
-        <!-- 通用 -->
+
+        <script src="/static/layui/layui.min.js"></script>
         <%_ jsList.forEach(item => { _%>
         <script src="/static/<%= item %>.min.js"></script>
         <%_ }) _%>

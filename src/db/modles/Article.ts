@@ -31,17 +31,22 @@ export default class Article extends Model {
     @Column({ type: DataType.STRING, comment: "标题" })
     title!: string;
 
-    @Column({ type: DataType.STRING, comment: "HTML" })
+    @Column({ type: DataType.TEXT, comment: "HTML" })
     html!: string;
 
-    @Column({ type: DataType.STRING, comment: "content" })
-    content!: string;
+    @Column({ type: DataType.TEXT, comment: "内容" })
+    set content(val: Array<any>) {
+        this.setDataValue("content", JSON.stringify(val));
+    }
+    get content(): Array<any> {
+        return JSON.parse(this.getDataValue("content"));
+    }
 
     @Column({ type: DataType.STRING, comment: "封面图片" })
-    set images(val: Array<String>) {
+    set images(val: Array<Object>) {
         this.setDataValue("images", JSON.stringify(val));
     }
-    get images(): Array<String> {
+    get images(): Array<Object> {
         if (this.getDataValue("images")) {
             return JSON.parse(this.getDataValue("images"));
         }

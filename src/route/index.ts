@@ -7,7 +7,8 @@ const router = Router();
 const routeList = fs.readdirSync(RUOYU.path(__dirname, "./modules"));
 for (const key of routeList) {
     import(RUOYU.path(__dirname, "./modules/", key)).then((item) => {
-        router.use(`/${key.split(".")[0]}`, item.default);
+        const route = key.split(".")[0] === "index" ? "" : key.split(".")[0];
+        router.use(`/${route}`, item.default);
     });
 }
 

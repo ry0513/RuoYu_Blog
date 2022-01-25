@@ -13,7 +13,7 @@ export default class Tag extends Model {
     @Column({ type: DataType.INTEGER, comment: "标签id" })
     tagId!: number;
 
-    @Column({ type: DataType.STRING, comment: "标签内容" })
+    @Column({ type: DataType.STRING, comment: "标签名称" })
     content!: string;
 
     @ForeignKey(() => User)

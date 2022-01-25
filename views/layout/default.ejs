@@ -8,13 +8,14 @@
         <meta name="keywords" content="<%= RUOYU.keywords %>" />
         <meta name="apple-mobile-web-app-title" content="<%= RUOYU.appTitle %>" />
         <title><%= RUOYU.title %></title>
+        <link rel="stylesheet" href="/static/layui/css/layui.min.css" />
         <%_ cssList.forEach(item => { _%>
         <link rel="stylesheet" href="/static/<%= item %>.min.css" />
         <%_ }) _%>
     </head>
     <body>
         <%- include(`../pages/${page}`) %>
-        <!-- 通用 -->
+        <script src="/static/layui/layui.min.js"></script>
         <% jsList.forEach(item => { %>
         <script src="/static/<%= item %>.min.js"></script>
         <% }) %>

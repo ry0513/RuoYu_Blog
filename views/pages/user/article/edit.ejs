@@ -4,7 +4,7 @@
 <div id="content">
     <div id="editor-container">
         <div id="title-container">
-            <input class="article-title" value="<%= article.title %>" placeholder="请输入标题" />
+            <input id="title" placeholder="请输入标题" />
         </div>
         <div id="editor-text-area"></div>
     </div>
@@ -34,16 +34,16 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">封面图片</label>
                 <div class="layui-input-block">
-                    <input type="text" name="images" required lay-verify="required" value="<%= article.images %>" placeholder="请输入图片地址" autocomplete="off" class="layui-input" />
+                    <input type="text" name="images" required value="5555555" lay-verify="url" placeholder="请输入图片链接" autocomplete="off" class="layui-input" />
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">所属分类</label>
                 <div class="layui-input-block">
-                    <select name="sortId" lay-verify="required">
+                    <select name="sortId" lay-verify="required" class="sort">
                         <option value=""></option>
                         <% sorts.forEach(item=> { %>
-                        <option value="<%= item.sortId %>" <%= article.sortId===item.sortId ?'selected':'' %>><%=item.content %></option>
+                        <option value="<%= item.sortId %>"><%=item.content %></option>
                         <% }) %>
                     </select>
                 </div>
@@ -52,8 +52,7 @@
                 <label class="layui-form-label">文章标签</label>
                 <div class="layui-input-block">
                     <% tags.forEach(item=> { %>
-                    <input <%= article.tags.map(tag=>tag.tagId).indexOf(item.tagId)>-1?'checked':'' %> type="checkbox" value="<%=item.tagId %>" title="<%=item.content %>"
-                    lay-skin="primary" />
+                    <input type="checkbox" value="<%=item.tagId %>" id="tag-<%=item.tagId %>" title="<%=item.content %>" lay-skin="primary" />
                     <% }) %>
                 </div>
             </div>
@@ -72,5 +71,4 @@
             </div>
         </div>
     </div>
-    <div class="article-content"><%= article.content %></div>
 </div>

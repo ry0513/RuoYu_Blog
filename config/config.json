@@ -20,12 +20,10 @@
 		"axios/axios",
 		"ruoyu/tools",
 		"ruoyu/dom",
-		"layui/layui",
 		"qs/qs"
 	],
 	"cssList": [
-		"notice/notice",
-		"layui/css/layui"
+		"notice/notice"
 	],
 	"TXDT": {
 		"KEY": "6J2BZ-7W7C6-B52SA-MQCNX-TPUTF-xxxx",

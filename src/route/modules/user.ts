@@ -2,7 +2,7 @@ import { Router } from "express";
 import { needLogin } from "../../core/permission";
 import RUOYU from "../../core/ruoyu";
 import Locals from "../../core/locals/user";
-import { getArticle, getArticleTags, getArticleSorts } from "../../db/api/article";
+import { getArticle, getArticleTags, getArticleSorts, getArticleSortCount } from "../../db/api/article";
 import { toPInt } from "../../core/tools";
 
 const router = Router();
@@ -20,8 +20,16 @@ router.get("/", (req, res) => {
 });
 
 router.get("/article", (req, res) => {
-    needLogin(20, req, res, () => {
-        res.locals = { ...res.locals, page: "user/article/list", user: req.session.userData, cssList: RUOYU.getCssList("user/index"), jsList: RUOYU.getJsList("user/article/list") };
+    needLogin(10, req, res, async () => {
+        const count = await getArticleSortCount(req.session.userData.userId);
+        res.locals = {
+            ...res.locals,
+            page: "user/article/list",
+            user: req.session.userData,
+            count,
+            cssList: RUOYU.getCssList("user/index"),
+            jsList: RUOYU.getJsList("user/article/list"),
+        };
         res.render("layout/user");
     });
 });
@@ -71,8 +79,22 @@ router.get("/tag", (req, res) => {
 });
 
 router.get("/tag/my", (req, res) => {
-    needLogin(40, req, res, () => {
+    needLogin(10, req, res, () => {
         res.locals = { ...res.locals, page: "user/tag/my", user: req.session.userData, cssList: RUOYU.getCssList("user/index"), jsList: RUOYU.getJsList("user/tag/my") };
+        res.render("layout/user");
+    });
+});
+
+router.get("/sort", (req, res) => {
+    needLogin(10, req, res, () => {
+        res.locals = { ...res.locals, page: "user/sort/list", user: req.session.userData, cssList: RUOYU.getCssList("user/index"), jsList: RUOYU.getJsList("user/sort/list") };
+        res.render("layout/user");
+    });
+});
+
+router.get("/sort/my", (req, res) => {
+    needLogin(10, req, res, () => {
+        res.locals = { ...res.locals, page: "user/sort/my", user: req.session.userData, cssList: RUOYU.getCssList("user/index"), jsList: RUOYU.getJsList("user/sort/my") };
         res.render("layout/user");
     });
 });

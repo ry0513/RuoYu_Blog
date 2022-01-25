@@ -82,7 +82,7 @@ class Dom {
     html(html) {
         if (html === undefined) {
             if (!this.element) {
-                return "";
+                return undefined;
             }
             return this.element.innerHTML;
         }
@@ -93,7 +93,7 @@ class Dom {
     }
 
     /**
-     * @description 设置/value
+     * @description 设置/获取value
      * @param {string} [value]
      * @return {*}
      * @memberof Dom
@@ -101,12 +101,32 @@ class Dom {
     val(value) {
         if (value === undefined) {
             if (!this.element) {
-                return "";
+                return undefined;
             }
             return this.element.value;
         }
         this.each((el) => {
             el.value = value;
+        });
+        return this;
+    }
+
+    /**
+     * @description 设置/获取属性
+     * @param {string} attr
+     * @param {string} [val]
+     * @return {*}
+     * @memberof Dom
+     */
+    attr(attr, val) {
+        if (val === undefined) {
+            if (!this.element) {
+                return undefined;
+            }
+            return this.element.getAttribute(attr) || undefined;
+        }
+        this.each((el) => {
+            el.setAttribute(attr, val);
         });
         return this;
     }

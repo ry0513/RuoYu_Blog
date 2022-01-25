@@ -1,10 +1,9 @@
-layui.use("table", () => {
-    var table = layui.table;
+layui.use(["table", "util", "element"], () => {
+    const { table, util, element } = layui;
     table.render({
         elem: "#article",
-        height: 500,
-        url: "/api/article/list", //数据接口
-        page: true, //开启分页
+        url: "/api/article/list",
+        page: true,
         cols: [
             [
                 {
@@ -24,17 +23,11 @@ layui.use("table", () => {
                         switch (status) {
                             case 0:
                                 return "草稿";
-
                             case 1:
                                 return "审核中";
-
                             case 2:
                                 return "发布";
-
                             case 3:
-                                return "驳回";
-
-                            case 4:
                                 return "回收站";
                         }
                     },
@@ -61,7 +54,7 @@ layui.use("table", () => {
                     title: "创建时间",
                     width: 160,
                     templet: ({ createdAt }) => {
-                        return $ryTools.dayjs(createdAt);
+                        return util.toDateString(createdAt, "yyyy-MM-dd HH:mm:ss");
                     },
                 },
 
@@ -76,7 +69,7 @@ layui.use("table", () => {
             ],
         ],
     });
-    table.on("tool(article)", function (obj) {
+    table.on("tool(article)", (obj) => {
         var data = obj.data;
         console.log(obj);
         if (obj.event === "del") {
@@ -85,5 +78,18 @@ layui.use("table", () => {
                 layer.close(index);
             });
         }
+    });
+    element.on("tab(statusTab)", (data) => {
+        const param = {};
+        const status = $ry(".layui-tab-title .layui-this").attr("status");
+        console.log(status);
+        if (status) param.status = status;
+
+        table.reload("article", {
+            where: param,
+            page: {
+                curr: 1, //重新从第 1 页开始
+            },
+        });
     });
 });

@@ -48,7 +48,6 @@ router.delete("/", (req, res) => {
         const tagId = toPInt(req.query.tagId);
         if (tagId) {
             const data = await getTag(tagId);
-
             if (data) {
                 if (data.userId !== req.session.userData.userId && req.session.userData.userStatus !== 1000) {
                     RUOYU.res.error(res, { msg: "权限不足，该标签不属于你" });
