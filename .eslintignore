@@ -1,2 +1,3 @@
 build/
-*.min.js
+static/js
+static/plugin

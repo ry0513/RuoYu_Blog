@@ -1,0 +1,100 @@
+.main {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+body {
+    // background: #f8f8f8;
+    font-size: 14px;
+}
+a {
+    color: inherit;
+    text-decoration: none;
+    &:hover {
+        color: yellowgreen;
+    }
+}
+.container {
+    width: 100%;
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    padding: 0 15px;
+}
+
+/* ==================
+         Header
+  ==================== */
+header {
+    position: fixed;
+    left: 0;
+    width: 100%;
+    top: 0;
+    z-index: 999;
+    height: 50px;
+    line-height: 50px;
+    background: #fff;
+    border-bottom: 1px solid #e8e8e8;
+    .container {
+        display: flex;
+        justify-content: space-between;
+    }
+}
+/* ==================
+         Footer
+  ==================== */
+footer {
+    .container {
+        padding: 20px;
+        margin: 0 auto;
+        color: #f1f1f1;
+        text-align: center;
+        line-height: 1.8;
+    }
+
+    background: #202020;
+    font-size: 14px;
+}
+
+/* ==================
+         间距
+  ==================== */
+$spacing: (
+    10: 10px,
+    20: 20px,
+);
+@each $size, $px in $spacing {
+    @each $original, $abbrev in (margin: m, padding: p) {
+        .#{$abbrev}-#{$size} {
+            #{$original}: $px;
+        }
+        .#{$abbrev}t-#{$size},
+        .#{$abbrev}y-#{$size} {
+            #{$original}-top: $px;
+        }
+        .#{$abbrev}b-#{$size},
+        .#{$abbrev}y-#{$size} {
+            #{$original}-bottom: $px;
+        }
+        .#{$abbrev}l-#{$size},
+        .#{$abbrev}x-#{$size} {
+            #{$original}-left: $px;
+        }
+        .#{$abbrev}r-#{$size},
+        .#{$abbrev}x-#{$size} {
+            #{$original}-right: $px;
+        }
+    }
+}
+
+/* ==================
+         颜色
+  ==================== */
+$color: (-white: #ffffff, -grey: #f1f1f1, -red: #ff5722, -black: #393d49);
+@each $colorName, $color in $color {
+    @each $original, $abbrev in (background-color: bg, color: fc) {
+        .#{$abbrev}#{$colorName} {
+            #{$original}: $color;
+        }
+    }
+}

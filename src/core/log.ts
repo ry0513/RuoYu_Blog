@@ -3,7 +3,7 @@ import fs from "fs-extra";
 import { resolve } from "path";
 import dayjs from "dayjs";
 
-const LOG_FILE_PATH = resolve(__dirname, `../../logs`);
+const LOG_FILE_PATH = resolve(__dirname, "../../logs");
 if (!fs.existsSync(LOG_FILE_PATH)) fs.mkdirSync(LOG_FILE_PATH);
 
 log4js.configure({

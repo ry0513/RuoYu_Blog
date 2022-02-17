@@ -1,37 +1,34 @@
 import { Request, Response } from "express";
-import { getUserData } from "../db/api/user";
+import { getUser } from "../db/api/user";
 import RUOYU from "./ruoyu";
 import { getUrl } from "./tools";
-
-/**
- * @description 检测登录
- */
-export const needLogin = async (permission: number, req: Request, res: Response, trueCallBack?: Function, falseCallBack?: Function) => {
+export const needLogin = async (minStatus: number, req: Request, res: Response, trueCallBack?: () => void, falseCallBack?: () => void): Promise<boolean> => {
     if (req.session.account) {
         const account = req.session.account;
-        const userData = await getUserData({ userId: account.accountId });
-
-        if (userData) {
-            req.session.userData = userData;
-            if (userData.userStatus >= permission) {
-                trueCallBack && trueCallBack();
-                return true;
-            } else {
+        if (!req.session.blog) {
+            const user = await getUser(account.accountId);
+            if (!user) {
                 res.locals = {
-                    page: "err/403",
-                    permission,
-                    userStatus: userData.userStatus,
+                    page: "console/register",
+                    account,
+                    jsList: ["js/console/register"],
+                    cssList: ["css/console/register"],
                 };
                 res.render("layout/default");
                 return false;
             }
+            const { userId, nickName, avatar, status } = user;
+            req.session.blog = { userId, nickName, avatar, status, articlePass: {} };
+        }
+        if (req.session.blog.status >= minStatus) {
+            trueCallBack && trueCallBack();
+            return true;
         }
         res.locals = {
-            page: "user/register",
-            account,
-            jsList: RUOYU.getJsList("user/register"),
+            minStatus,
+            status: req.session.blog.status,
         };
-        res.render("layout/default");
+        res.render("error/403");
         return false;
     } else {
         falseCallBack ? falseCallBack() : res.redirect(`${RUOYU.account}/login?path=${getUrl(req)}`);
@@ -42,12 +39,12 @@ export const needLogin = async (permission: number, req: Request, res: Response,
 /**
  * @description 验证权限
  */
-export const needVerify = async (permission: number, req: Request, res: Response, trueCallBack?: Function, falseCallBack?: Function) => {
-    if (!req.session.userData) {
+export const needVerify = async (permission: number, req: Request, res: Response, trueCallBack?: () => void, falseCallBack?: () => void) => {
+    if (!req.session.blog) {
         falseCallBack ? falseCallBack() : RUOYU.res.needLogin(res);
         return false;
     }
-    if (req.session.userData.userStatus >= permission) {
+    if (req.session.blog.status >= permission) {
         trueCallBack && trueCallBack();
         return true;
     } else {

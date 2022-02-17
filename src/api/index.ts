@@ -3,11 +3,20 @@ import fs from "fs-extra";
 import RUOYU from "../core/ruoyu";
 const router = Router();
 
-const apiList = fs.readdirSync(RUOYU.path(__dirname, "./modules"));
-for (const key of apiList) {
-    import(RUOYU.path(__dirname, "./modules/", key)).then((item) => {
-        router.use("/" + key.split(".")[0], item.default);
-    });
+// 装载子路由;
+const routeList = fs.readdirSync(RUOYU.path(__dirname)).filter((item) => {
+    return item !== "index.js";
+});
+for (const key of routeList) {
+    if (fs.statSync(RUOYU.path(__dirname, key)).isDirectory()) {
+        import(RUOYU.path(__dirname, key, "./index")).then((item) => {
+            router.use(`/${key}`, item.default);
+        });
+    } else {
+        import(RUOYU.path(__dirname, key)).then((item) => {
+            router.use(`/${key.split(".")[0]}`, item.default);
+        });
+    }
 }
 
 export default router;

@@ -3,10 +3,18 @@ import Article from "../modles/Article";
 import User from "../modles/User";
 
 /**
- * @description 获取标签列表
+ * @description 获取分类
+ */
+export const getSorts = () => {
+    return Sort.findAll({ attributes: ["sortId", "content"] });
+};
+
+/**
+ * @description 获取分类列表（包含对应关系+分页）
  */
 export const getSortList = (where: { userId?: number }, offset: number, limit: number) => {
     return Sort.findAll({
+        attributes: ["sortId", "content", "createdAt"],
         order: [["sortId", "DESC"]],
         where,
         offset,
@@ -25,7 +33,7 @@ export const getSortList = (where: { userId?: number }, offset: number, limit: n
 };
 
 /**
- * @description 获取指定标签
+ * @description 获取指定分类
  */
 export const getSort = (sortId: number) => {
     return Sort.findOne({

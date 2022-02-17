@@ -1,6 +1,7 @@
 import { Request } from "express";
 import axios from "axios";
 import RUOYU from "./ruoyu";
+import UAParser from "ua-parser-js";
 import cheerio from "cheerio";
 import Prism from "prismjs";
 import loadLanguages from "prismjs/components/";
@@ -18,10 +19,14 @@ export const getIp = (req: Request) => {
  * @description 获取地址
  */
 export const getCity = (ip: string) => {
-    return new Promise<string>((resolve, reject) => {
+    return new Promise<string>((resolve) => {
         axios({
             method: "get",
-            url: `https://apis.map.qq.com/ws/location/v1/ip?ip=${ip}&key=${RUOYU.TXDT.KEY}&sig=${RUOYU.md5(`/ws/location/v1/ip?ip=${ip}&key=${RUOYU.TXDT.KEY}${RUOYU.TXDT.SK}`)}`,
+            url: `https://apis.map.qq.com/ws/location/v1/ip?ip=${ip}&key=${
+                RUOYU.TXDT.KEY
+            }&sig=${RUOYU.md5(
+                `/ws/location/v1/ip?ip=${ip}&key=${RUOYU.TXDT.KEY}${RUOYU.TXDT.SK}`
+            )}`,
         }).then(({ data: res }) => {
             if (res.status) {
                 resolve("未知地区");
@@ -43,29 +48,32 @@ export const getUrl = (req: Request) => {
 /**
  * @description 将参数转为字符串
  */
-export const toString = (val: any, str?: string): string | false => {
+export const toString = (val: unknown, str?: string): string | false => {
     if (val === undefined) {
         return str || false;
     }
 
-    return val || val === "" ? val.toString() : false;
+    return val || val === "" ? (val as string).toString() : false;
 };
 
 /**
  * @description 验证是否为整数并转为数字
  */
-export const toPInt = (val: any, num?: number): number | false => {
+export const toPInt = (val: unknown, num?: number): number | false => {
     if (val === undefined) {
         return num || false;
     }
 
-    return val ? /^[0-9]*$/.test(val.toString()) && parseInt(val.toString()) : false;
+    return val
+        ? /^[0-9]*$/.test((val as string).toString()) && parseInt((val as string).toString())
+        : false;
 };
 
 /**
  * @description 验证是否为数组，返回数组或false
  */
-export const toArray = (val: any, arr?: any[]): any[] | false => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const toArray = (val: any, arr?: Array<any>): Array<any> | false => {
     if (val === undefined) {
         return arr || false;
     }
@@ -73,9 +81,26 @@ export const toArray = (val: any, arr?: any[]): any[] | false => {
 };
 
 /**
+ * @description 格式化UA数据
+ */
+export const getUa = (
+    ua = ""
+): { ua: string; os: string; browser: string; device: string | null } => {
+    const uaInfo = UAParser(ua);
+    const browser = `${uaInfo.browser.name} ${uaInfo.browser.version || ""}`.trim();
+    const os = `${uaInfo.os.name} ${uaInfo.os.version || ""}`.trim();
+    const device = uaInfo.device.model || null;
+    return { ua, os, browser, device };
+};
+
+/**
  * @description 格式化数据
  */
-export const formatParam = (val: string | number | false, key: string, param: { [key: string]: string | number }): void => {
+export const formatParam = (
+    val: string | number | false | Array<string | number>,
+    param: { [key: string]: string | number | Array<string | number> },
+    key: string
+): void => {
     if (val !== false) param[key] = val;
 };
 
@@ -101,7 +126,11 @@ export const formatCode = (html: string): string => {
             if (lang === "text") {
                 $(ele).addClass(`language-${lang}`);
             } else if (Languages.indexOf(lang) !== -1) {
-                code = Prism.highlight(code.replace(/&lt;/g, "<").replace(/&gt;/g, ">"), Prism.languages[lang], lang);
+                code = Prism.highlight(
+                    code.replace(/&lt;/g, "<").replace(/&gt;/g, ">"),
+                    Prism.languages[lang],
+                    lang
+                );
             }
             $(ele).html(code + getLine(code));
             $(ele)

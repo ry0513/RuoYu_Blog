@@ -7,21 +7,44 @@ import { Sequelize } from "sequelize-typescript";
 /**
  * @description 获取文章
  */
-export const getArticle = (where: { articleId: number; userId?: number }) => {
+export const getArticle = (where: { articleId: number; userId?: number; status?: number }) => {
     return Article.findOne({
         where,
-        include: Tag,
+        include: [
+            {
+                model: Tag,
+                attributes: ["tagId", "content"],
+            },
+            {
+                model: Sort,
+                attributes: ["sortId", "content"],
+            },
+        ],
     });
 };
 
 /**
  * @description 获取文章列表
  */
-export const getArticleList = (where: { userId?: number; status?: number }, offset: number, limit: number) => {
+export const getArticleList = (
+    where: { userId?: number; status?: Array<number> },
+    offset: number,
+    limit: number
+) => {
     return Article.findAll({
         order: [["articleId", "DESC"]],
+        attributes: ["articleId", "title", "status", "password", "createdAt"],
         where,
-        include: [Tag],
+        include: [
+            {
+                model: Tag,
+                attributes: ["tagId", "content"],
+            },
+            {
+                model: Sort,
+                attributes: ["sortId", "content"],
+            },
+        ],
         offset,
         limit,
     });
@@ -36,41 +59,42 @@ export const getArticleSortCount = (userId: number) => {
         group: "status",
         attributes: ["status", [Sequelize.fn("COUNT", Sequelize.col("status")), "count"]],
     }).then((data) => {
-        const count: number[] = [0, 0, 0, 0];
+        const count: Array<number> = [0, 0, 0, 0];
         data.forEach((item) => {
             count[item.status] = item.getDataValue("count");
         });
-        return count;
+        return {
+            draft: count[0],
+            audit: count[1],
+            release: count[2],
+            recycle: count[3],
+            all: count[0] + count[1] + count[2],
+        };
     });
 };
 
 /**
  * @description 获取总文章数量
  */
-export const getArticleCount = (where: { userId?: number; status?: number }) => {
+export const getArticleCount = (where: { userId?: number; status?: Array<number> }) => {
     return Article.count({
         where,
     });
 };
 
 /**
- * @description 获取文章标签
- */
-export const getArticleTags = () => {
-    return Tag.findAll();
-};
-
-/**
- * @description 获取文章分类
- */
-export const getArticleSorts = () => {
-    return Sort.findAll();
-};
-
-/**
  * @description 新增文章
  */
-export const addArticle = (data: { userId: number; title: string; html: string; content: Array<Object>; sortId?: number; images?: string[]; password?: string; status?: number }) => {
+export const addArticle = (data: {
+    userId: number;
+    title: string;
+    html: string;
+    content: Array<object>;
+    sortId?: number;
+    images?: Array<string>;
+    password?: string;
+    status?: number;
+}) => {
     return Article.create(data);
 };
 
@@ -84,15 +108,39 @@ export const setArticle = ({
     articleId: number;
     title: string;
     html: string;
-    content: Array<Object>;
+    content: Array<object>;
     sortId?: number;
-    images?: string[];
+    images?: Array<string>;
     password?: string;
     status?: number;
 }) => {
-    console.log();
-
     return Article.update(data, {
+        where: {
+            articleId,
+        },
+    });
+};
+
+/**
+ * @description 改变状态
+ */
+export const changeArticleStatus = (articleId: number, userId: number, status: number) => {
+    return Article.update(
+        { status },
+        {
+            where: {
+                articleId,
+                userId,
+            },
+        }
+    );
+};
+
+/**
+ * @description 删除指定文章
+ */
+export const delArticle = (articleId: number) => {
+    return Article.destroy({
         where: {
             articleId,
         },
@@ -102,15 +150,13 @@ export const setArticle = ({
 /**
  * @description 新增标签文章对应关系
  */
-
 export const addTagArticle = (data: { tagId: number; articleId: number }) => {
     return TagArticle.create(data);
 };
 
 /**
- * @description 删除del文章对应关系
+ * @description 删除标签文章对应关系
  */
-
 export const delTagArticle = (articleId: number) => {
     return TagArticle.destroy({
         where: {
@@ -118,15 +164,3 @@ export const delTagArticle = (articleId: number) => {
         },
     });
 };
-
-// /**
-//  * @description 创建用户信息
-//  */
-// export const createUserData = ({ userId, nickName, avatar, registerIp }: Pick<User, "userId" | "nickName" | "avatar" | "registerIp" | "registerPlace">) => {
-//     return User.create({
-//         userId,
-//         nickName,
-//         avatar,
-//         registerIp,
-//     });
-// };

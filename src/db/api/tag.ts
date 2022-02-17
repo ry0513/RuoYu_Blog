@@ -3,10 +3,18 @@ import Article from "../modles/Article";
 import User from "../modles/User";
 
 /**
- * @description 获取标签列表
+ * @description 获取标签
+ */
+export const getTags = () => {
+    return Tag.findAll({ attributes: ["tagId", "content"] });
+};
+
+/**
+ * @description 获取标签列表（包含对应关系+分页）
  */
 export const getTagList = (where: { userId?: number }, offset: number, limit: number) => {
     return Tag.findAll({
+        attributes: ["tagId", "content", "createdAt"],
         order: [["tagId", "DESC"]],
         where,
         offset,

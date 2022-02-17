@@ -1,4 +1,14 @@
-import { Table, Model, PrimaryKey, Column, DataType, AutoIncrement, ForeignKey, HasMany, BelongsTo } from "sequelize-typescript";
+import {
+    Table,
+    Model,
+    PrimaryKey,
+    Column,
+    DataType,
+    AutoIncrement,
+    ForeignKey,
+    HasMany,
+    BelongsTo,
+} from "sequelize-typescript";
 import User from "./User";
 import Article from "./Article";
 
@@ -23,5 +33,5 @@ export default class Sort extends Model {
     user!: User;
 
     @HasMany(() => Article)
-    articles!: Article[];
+    articles!: Array<Article>;
 }

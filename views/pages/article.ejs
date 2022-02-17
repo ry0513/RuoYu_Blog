@@ -1,0 +1,44 @@
+<div class="container mt-20">
+    <% if (showType === 1) { %>
+    <div class="left">
+        <!-- <div class="breadcrumb">
+            <a href="/">首页</a> / <a href="/">HTML</a> /
+            <span>文章详情</span>
+        </div> -->
+        <% if (article.status!==2) { %>
+        <blockquote class="layui-elem-quote">预览模式</blockquote>
+        <% } %>
+
+        <div class="article">
+            <div class="title"><%- article.title %></div>
+            <div class="info">
+                标签：<span class="layui-badge">赤</span>
+                <span class="layui-badge layui-bg-orange">橙</span>
+                <span class="layui-badge layui-bg-green">绿</span>
+                <span class="layui-badge layui-bg-cyan">青</span>
+                <span class="layui-badge layui-bg-blue">蓝</span>
+                <span class="layui-badge layui-bg-black">黑</span>
+            </div>
+            <div class="info">创建时间：2021-02-02 05:05:04</div>
+            <hr />
+            <div class="html"><%- article.html %></div>
+        </div>
+    </div>
+    <% } else { %>
+    <div>
+        <div>抱歉，本文需要密码</div>
+        <br />
+        <div class="layui-input-inline">
+            <div style="display: none" class="articleId"><%= articleId %></div>
+            <input
+                type="password"
+                autocomplete="off"
+                placeholder="请输入密码"
+                class="layui-input password"
+            />
+            <br />
+            <button class="layui-btn submit">提交</button>
+        </div>
+    </div>
+    <% } %>
+</div>

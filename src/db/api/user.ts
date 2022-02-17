@@ -1,10 +1,13 @@
+import { getCity, getIp } from "../../core/tools";
+import { Request } from "express";
 import User from "../modles/User";
 
 /**
  * @description 获取用户信息
  */
-export const getUserData = ({ userId }: Pick<User, "userId">) => {
+export const getUser = (userId: number, attributes: Array<string> = []) => {
     return User.findOne({
+        attributes: ["userId", "nickName", "avatar", "status", ...attributes],
         where: { userId },
     });
 };
@@ -12,11 +15,21 @@ export const getUserData = ({ userId }: Pick<User, "userId">) => {
 /**
  * @description 创建用户信息
  */
-export const createUserData = ({ userId, nickName, avatar, registerIp }: Pick<User, "userId" | "nickName" | "avatar" | "registerIp" | "registerPlace">) => {
+export const createUser = async (
+    req: Request,
+    userId: number,
+    nickName: string,
+    avatar: string,
+    status: number
+) => {
+    const ip = getIp(req);
+    const place = await getCity(ip);
     return User.create({
         userId,
         nickName,
         avatar,
-        registerIp,
+        ip,
+        place,
+        status,
     });
 };

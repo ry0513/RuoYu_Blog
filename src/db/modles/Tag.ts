@@ -1,4 +1,15 @@
-import { Table, Model, PrimaryKey, Column, DataType, AutoIncrement, ForeignKey, BelongsToMany, HasMany, BelongsTo } from "sequelize-typescript";
+import {
+    Table,
+    Model,
+    PrimaryKey,
+    Column,
+    DataType,
+    AutoIncrement,
+    ForeignKey,
+    BelongsToMany,
+    HasMany,
+    BelongsTo,
+} from "sequelize-typescript";
 import User from "./User";
 import TagArticle from "./TagArticle";
 import Article from "./Article";
@@ -24,5 +35,5 @@ export default class Tag extends Model {
     user!: User;
 
     @BelongsToMany(() => Article, () => TagArticle)
-    articles!: Article[];
+    articles!: Array<Article>;
 }

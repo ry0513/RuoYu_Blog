@@ -18,25 +18,25 @@ export default class User extends Model {
     avatar!: string;
 
     @Column({ type: DataType.STRING, comment: "注册ip" })
-    registerIp!: string;
+    ip!: string;
 
     @Column({ type: DataType.STRING, comment: "注册地点" })
-    registerPlace!: string;
+    place!: string;
 
     @Default(50)
     @Column({ type: DataType.INTEGER, comment: "用户积分" })
-    userIntegral!: number;
+    integral!: number;
 
     @Default(10)
     @Column({ type: DataType.INTEGER, comment: "用户状态" })
-    userStatus!: number;
+    status!: number;
 
     @HasMany(() => Article)
-    articles!: Article[];
+    articles!: Array<Article>;
 
     @HasMany(() => Tag)
-    tags!: Tag[];
+    tags!: Array<Tag>;
 
     @HasMany(() => Sort)
-    sorts!: Sort[];
+    sorts!: Array<Sort>;
 }

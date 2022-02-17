@@ -1,0 +1,101 @@
+.html {
+    p,
+    li,
+    td,
+    th,
+    blockquote {
+        white-space: pre-wrap;
+        margin-bottom: 20px;
+    }
+
+    /* 表格 */
+    table {
+        border-collapse: collapse;
+    }
+    table th,
+    table td {
+        border: 1px solid #ccc;
+        min-width: 50px;
+        height: 20px;
+        text-align: left;
+    }
+    table th {
+        background-color: #f1f1f1;
+        text-align: center;
+    }
+
+    /* 引用 */
+    blockquote {
+        display: block;
+        border-left: 8px solid #d0e5f2;
+        padding: 10px 10px;
+        margin: 10px 0;
+        background-color: #f1f1f1;
+    }
+
+    /* 列表 */
+    ul,
+    ol {
+        margin: 10px 0 10px 20px;
+    }
+
+    /* 分割线 */
+    hr {
+        display: block;
+        width: 90%;
+        margin: 20px auto;
+        border: 0;
+        height: 1px;
+        background-color: #ccc;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    div[class*="language-"] {
+        position: relative;
+        border-radius: 3px;
+        margin-bottom: 16px;
+        padding: 16px 50px 16px 3.8em;
+        background: #2d2d2d;
+        box-sizing: border-box;
+        &:before {
+            content: attr(lang);
+            position: absolute;
+            z-index: 3;
+            top: 0.8em;
+            right: 1em;
+            font-size: 0.75rem;
+            color: #ccc;
+        }
+        pre[class*="language-"] {
+            padding: 0.3em 0;
+            margin: 0;
+            position: static;
+            code {
+                position: static;
+            }
+            .line-numbers-rows {
+                left: 0;
+                top: 1.3em;
+            }
+        }
+    }
+}
+
+.container {
+    .article {
+        .title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            padding-top: 20px;
+        }
+        .info {
+            font-size: 12px;
+            margin: 10px 0;
+            color: #bdc3c7;
+        }
+    }
+}

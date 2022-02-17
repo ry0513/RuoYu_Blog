@@ -1,0 +1,109 @@
+<div style="border-bottom: 1px solid #e8e8e8">
+    <div id="editor-toolbar"></div>
+</div>
+<div id="content">
+    <div id="editor-container">
+        <div id="title-container">
+            <input id="title" placeholder="请输入标题" />
+        </div>
+        <div id="editor-text-area"></div>
+    </div>
+</div>
+<div style="display: none">
+    <div class="w-e-bar-item home">
+        <button type="button" data-tooltip="首页" class="w-e-menu-tooltip-v5">
+            <svg viewBox="0 0 1103 1024">
+                <path
+                    d="M890.436887 1023.98924201H642.35818a53.789833 53.789833 0 0 1-53.789833-53.789832V711.70698999h-73.369331v258.49242a53.789833 53.789833 0 0 1-53.789833 53.789832H216.235127a53.789833 53.789833 0 0 1-53.78983301-53.789832v-362.543472H53.789833a53.789833 53.789833 0 0 1-37.265596-92.518512l520.470419-500.15937799A53.789833 53.789833 0 0 1 613.204091 16.71008l475.728036 500.041041A53.789833 53.789833 0 0 1 1049.977531 607.612907h-105.750811v362.54347101a53.789833 53.789833 0 0 1-53.789833 53.832864z m-194.288875-107.57966501h140.499043v-362.54347101a53.789833 53.789833 0 0 1 53.789832-53.78983299h34.12427L572.549735 130.02374201l-385.13520101 370.00949899H216.235127a53.789833 53.789833 0 0 1 53.789832 53.78983301v362.54347099h137.594392V657.91715799a53.789833 53.789833 0 0 1 53.789832-53.78983299h180.948997a53.789833 53.789833 0 0 1 53.789832 53.78983299z"
+                ></path>
+            </svg>
+        </button>
+    </div>
+    <div class="w-e-bar-item draft">
+        <button
+            type="button"
+            data-tooltip="草稿"
+            class="w-e-menu-tooltip-v5 <%= article.status && article.status !== '0'?'disabled':'9' %>"
+        >
+            <svg viewBox="0 0 1024 1024">
+                <path
+                    d="M857.856 1006.08H166.144a148.416 148.416 0 0 1-148.16-148.224V166.144A148.416 148.416 0 0 1 166.144 17.984h502.592c39.552 0 76.8 15.36 104.768 43.392l189.12 189.12a147.2 147.2 0 0 1 43.392 104.832v502.528a148.416 148.416 0 0 1-148.16 148.16zM166.144 116.736a49.472 49.472 0 0 0-49.344 49.344v691.712c0 27.264 22.144 49.344 49.344 49.344h691.712a49.408 49.408 0 0 0 49.344-49.344V355.328a49.216 49.216 0 0 0-14.464-34.944L703.616 131.2a49.92 49.92 0 0 0-34.88-14.464H166.144z m494.08 247.04H264.96a49.408 49.408 0 0 1-49.408-49.472v-247.04a49.408 49.408 0 0 1 98.816 0V264.96h296.448V67.392a49.408 49.408 0 0 1 98.816 0v247.04a49.408 49.408 0 0 1-49.408 49.344z m98.816 642.176a49.408 49.408 0 0 1-49.408-49.408v-247.04H314.368v247.04a49.408 49.408 0 0 1-98.816 0.512v-296.896c0-27.328 22.144-49.408 49.408-49.408h494.08c27.264 0 49.408 22.08 49.408 49.408v296.384a49.408 49.408 0 0 1-49.408 49.408z"
+                ></path>
+            </svg>
+        </button>
+    </div>
+    <div class="w-e-bar-item release">
+        <button type="button" data-tooltip="发布" class="w-e-menu-tooltip-v5">
+            <svg viewBox="0 0 1026 1024">
+                <path
+                    d="M1019.957118 59.064242a63.5872 63.5872 0 0 0-6.994592-21.619648L1009.147294 32.357618a67.402432 67.402432 0 0 0-12.71744-14.625056 72.489408 72.489408 0 0 0-26.706624-17.168544h-5.722848a75.668768 75.668768 0 0 0-18.440288 0h-7.630464a75.032896 75.032896 0 0 0-22.25552 6.35872L39.442496 465.386449a63.5872 63.5872 0 0 0 0 117.63632l132.261376 70.581792a73.761152 73.761152 0 0 0 97.288415-25.43488 63.5872 63.5872 0 0 0-27.342496-91.565568l-20.983776-11.445696 445.110399-233.365023L375.182911 636.436017a63.5872 63.5872 0 0 0-15.8968 41.967552v274.060831a71.217664 71.217664 0 0 0 143.0712 0v-159.603871l281.055423 155.152767a75.032896 75.032896 0 0 0 66.76656 0 68.038304 68.038304 0 0 0 40.059936-50.86976L1019.957118 76.868658a63.5872 63.5872 0 0 0 0-12.71744V59.064242z m-254.3488 722.350591l-225.098687-127.1744 300.131583-353.544831z"
+                ></path>
+            </svg>
+        </button>
+    </div>
+    <div class="w-e-bar-divider divider1"></div>
+    <div class="w-e-bar-divider divider2"></div>
+    <div class="release-from">
+        <div class="layui-form open">
+            <div class="layui-form-item">
+                <label class="layui-form-label">封面图片</label>
+                <div class="layui-input-block">
+                    <input
+                        type="text"
+                        name="images"
+                        required
+                        value="https://"
+                        lay-verify="url"
+                        placeholder="请输入图片链接"
+                        autocomplete="off"
+                        class="layui-input"
+                    />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">所属分类</label>
+                <div class="layui-input-block">
+                    <select name="sortId" lay-verify="required" class="sort">
+                        <option value=""></option>
+                        <% sorts.forEach(item=> { %>
+                        <option value="<%= item.sortId %>"><%=item.content %></option>
+                        <% }) %>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">文章标签</label>
+                <div class="layui-input-block">
+                    <% tags.forEach(item=> { %>
+                    <input
+                        type="checkbox"
+                        value="<%=item.tagId %>"
+                        id="tag-<%=item.tagId %>"
+                        title="<%=item.content %>"
+                        lay-skin="primary"
+                    />
+                    <% }) %>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">查看密码</label>
+                <div class="layui-input-block">
+                    <input
+                        type="text"
+                        name="password"
+                        placeholder="不需要密码请不要填写"
+                        autocomplete="off"
+                        class="layui-input"
+                    />
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="form">立即提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

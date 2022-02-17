@@ -1,4 +1,4 @@
-import { Request, Response } from "Express";
+import { Request, Response } from "express";
 export default (req: Request, res: Response) => {
     res.locals = {
         current: req.path,
@@ -17,7 +17,7 @@ export default (req: Request, res: Response) => {
             const currentPath1 = "/" + current.split("/")[1];
             const currentPath2 = current.replace(currentPath1, "");
 
-            let res = '<div class="layui-breadcrumb"><a href="">首页</a>';
+            let res = "<div class='layui-breadcrumb'><a href='/'>首页</a>";
             menu.forEach((item) => {
                 if (item.path === currentPath1) {
                     if (item.children) {
