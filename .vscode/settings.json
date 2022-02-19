@@ -2,7 +2,6 @@
     "prettier.tabWidth": 4,
     "prettier.printWidth": 200,
     "path-intellisense.mappings": {
-        "static": "${workspaceRoot}/static"
-    },
-    "es6-css-minify.minifyOnSave": "yes"
+        "<% cdnUrl %>": "${workspaceRoot}/static"
+    }
 }

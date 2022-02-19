@@ -89,7 +89,6 @@ fs.watch(
 /**
  *    js相关
  */
-
 // 创建 js 文件夹
 if (!fs.existsSync(resolve(__dirname, "../js"))) {
     fs.mkdirSync(resolve(__dirname, "../js"));

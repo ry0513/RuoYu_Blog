@@ -21,6 +21,7 @@ router.get("/?:articleId", async (req, res, next) => {
             ) {
                 res.locals = {
                     ...res.locals,
+                    websiteTitle: article.title,
                     showType: 1,
                     page: "article",
                     article,

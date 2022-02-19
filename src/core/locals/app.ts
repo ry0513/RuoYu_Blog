@@ -2,10 +2,18 @@ import { Express } from "express";
 import RUOYU from "../ruoyu";
 export default (app: Express) => {
     app.locals = {
-        RUOYU: {},
+        websiteTitle: "若",
+        websiteDescription: "description",
+        websiteKeywords: "keyword",
+
+        RUOYU: {
+            title: "若",
+            description: "description",
+        },
         cssList: [], // 占位，防止报错
         jsList: [], // 占位，防止报错
         cdnUrl: RUOYU.cdnUrl,
+        version: RUOYU.version,
         dayjs: RUOYU.dayjs,
     };
 };

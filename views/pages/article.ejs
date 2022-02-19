@@ -19,7 +19,7 @@
                 <span class="layui-badge layui-bg-blue">蓝</span>
                 <span class="layui-badge layui-bg-black">黑</span>
             </div>
-            <div class="info">创建时间：2021-02-02 05:05:04</div>
+            <div class="info">创建时间：<%= dayjs(article.createdAt) %></div>
             <hr />
             <div class="html"><%- article.html %></div>
         </div>
@@ -30,12 +30,7 @@
         <br />
         <div class="layui-input-inline">
             <div style="display: none" class="articleId"><%= articleId %></div>
-            <input
-                type="password"
-                autocomplete="off"
-                placeholder="请输入密码"
-                class="layui-input password"
-            />
+            <input type="password" autocomplete="off" placeholder="请输入密码" class="layui-input password" />
             <br />
             <button class="layui-btn submit">提交</button>
         </div>

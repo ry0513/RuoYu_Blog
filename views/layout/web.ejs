@@ -4,26 +4,29 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
-        <link rel="stylesheet" href="<%= cdnUrl %>/plugin/layui/css/layui.min.css" />
-        <link rel="stylesheet" href="<%= cdnUrl %>/plugin/notice/colored-theme.min.css" />
-        <link rel="stylesheet" href="<%= cdnUrl %>/css/layout.min.css" />
+        <meta name="description" content="<%= websiteDescription %>" />
+        <meta name="keywords" content="<%= websiteKeywords %>" />
+        <meta name="apple-mobile-web-app-title" content="<%= RUOYU.appTitle %>" />
+        <title><%= websiteTitle %></title>
+        <link rel="stylesheet" href="<%= cdnUrl %>/plugin/layui/css/layui.min.css?v=<%= version %>" />
+        <link rel="stylesheet" href="<%= cdnUrl %>/plugin/notice/colored-theme.min.css?v=<%= version %>" />
+        <link rel="stylesheet" href="<%= cdnUrl %>/css/layout.min.css?v=<%= version %>" />
         <%_ cssList.forEach(item => { _%>
-        <link rel="stylesheet" href="<%= cdnUrl %>/<%= item %>.min.css" />
+        <link rel="stylesheet" href="<%= cdnUrl %>/<%= item %>.min.css?v=<%= version %>" />
         <%_ }) _%>
     </head>
     <body>
         <%- include(`../components/header`) %>
         <div class="main"><%- include(`../pages/${page}`) %></div>
         <%- include(`../components/footer`) %>
-        <!-- <script src="<%= cdnUrl %>/plugin/layui/layui.min.js"></script> -->
-        <script src="<%= cdnUrl %>/plugin/qs/qs.min.js"></script>
-        <script src="<%= cdnUrl %>/plugin/axios/axios.min.js"></script>
-        <script src="<%= cdnUrl %>/plugin/notice/notice.min.js"></script>
-        <script src="<%= cdnUrl %>/js/ruoyu/tools.min.js"></script>
-        <script src="<%= cdnUrl %>/js/ruoyu/dom.min.js"></script>
+        <!-- <script src="<%= cdnUrl %>/plugin/layui/layui.min.js?v=<%= version %>"></script> -->
+        <script src="<%= cdnUrl %>/plugin/qs/qs.min.js?v=<%= version %>"></script>
+        <script src="<%= cdnUrl %>/plugin/axios/axios.min.js?v=<%= version %>"></script>
+        <script src="<%= cdnUrl %>/plugin/notice/notice.min.js?v=<%= version %>"></script>
+        <script src="<%= cdnUrl %>/js/ruoyu/tools.min.js?v=<%= version %>"></script>
+        <script src="<%= cdnUrl %>/js/ruoyu/dom.min.js?v=<%= version %>"></script>
         <% jsList.forEach(item => { %>
-        <script src="<%= cdnUrl %>/<%= item %>.min.js"></script>
+        <script src="<%= cdnUrl %>/<%= item %>.min.js?v=<%= version %>"></script>
         <% }) %>
     </body>
 </html>
