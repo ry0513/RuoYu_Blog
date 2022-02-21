@@ -51,11 +51,7 @@ router.get("/edit", (req, res) => {
             page: "console/article/edit",
             user: req.session.blog,
             cssList: ["plugin/wangeditor/style", "css/console/index", "css/console/edit"],
-            jsList: [
-                "plugin/wangeditor/index",
-                "plugin/localforage/localforage",
-                "js/console/article/edit",
-            ],
+            jsList: ["plugin/wangeditor/index", "plugin/localforage/localforage", "js/console/article/edit"],
         };
         res.render("layout/default");
     });

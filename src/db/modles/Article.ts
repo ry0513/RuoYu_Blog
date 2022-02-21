@@ -1,15 +1,4 @@
-import {
-    Table,
-    Model,
-    PrimaryKey,
-    Column,
-    DataType,
-    AutoIncrement,
-    ForeignKey,
-    BelongsToMany,
-    Default,
-    BelongsTo,
-} from "sequelize-typescript";
+import { Table, Model, PrimaryKey, Column, DataType, AutoIncrement, ForeignKey, BelongsToMany, Default, BelongsTo } from "sequelize-typescript";
 import User from "./User";
 import TagArticle from "./TagArticle";
 import Tag from "./Tag";
@@ -63,6 +52,9 @@ export default class Article extends Model {
         }
         return [];
     }
+
+    @Column({ type: DataType.DATE, comment: "发表时间" })
+    releaseAt!: Date;
 
     @Default(0)
     @Column({ type: DataType.INTEGER, comment: "状态[0草稿1审核中2发布3回收站]" })

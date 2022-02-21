@@ -14,6 +14,8 @@ export default (app: Express) => {
         jsList: [], // 占位，防止报错
         cdnUrl: RUOYU.cdnUrl,
         version: RUOYU.version,
-        dayjs: RUOYU.dayjs,
+        dayjs: (date: Date, format = "YYYY-MM-DD HH:mm:ss") => {
+            return RUOYU.dayjs(date).format(format);
+        },
     };
 };

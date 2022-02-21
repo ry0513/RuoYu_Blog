@@ -1,18 +1,8 @@
 import { Router } from "express";
 import { needVerify } from "../core/permission";
 import RUOYU from "../core/ruoyu";
-import { toPInt, toString, toArray, formatCode } from "../core/tools";
-import {
-    addArticle,
-    addTagArticle,
-    changeArticleStatus,
-    delTagArticle,
-    getArticle,
-    getArticleCount,
-    getArticleList,
-    getArticleSortCount,
-    setArticle,
-} from "../db/api/article";
+import { toPInt, toString, toArray, formatCode, toDate } from "../core/tools";
+import { addArticle, addTagArticle, changeArticleStatus, delTagArticle, getArticle, getArticleCount, getArticleList, getArticleSortCount, setArticle } from "../db/api/article";
 import { getTag } from "../db/api/tag";
 const router = Router();
 
@@ -24,8 +14,8 @@ router.get("/list", (req, res) => {
         const status = toArray(req.query.status);
         if (page && limit) {
             const param = { userId: req.session.blog.userId, status: status || [0, 1, 2] };
-            const data = await getArticleList(param, (page - 1) * limit, limit);
-            const count = await getArticleCount(param);
+            const data = await getArticleList({ param, attributes: ["createdAt", "password"], offset: (page - 1) * limit, limit, isMe: true });
+            const count = await getArticleCount({ param, isMe: true });
             RUOYU.res.success(res, { count, data });
             return;
         }
@@ -66,6 +56,7 @@ router.post("/", (req, res) => {
                         images,
                         password,
                         status,
+                        releaseAt: new Date(),
                     });
                     tags.forEach(async (tagId) => {
                         (await getTag(tagId)) && (await addTagArticle({ tagId, articleId }));
@@ -87,7 +78,15 @@ router.put("/", (req, res) => {
         const content = toArray(req.body.content);
         const articleId = toPInt(req.body.articleId);
         const status = toString(req.body.status);
-        if (articleId && title && html && content) {
+        const releaseAt = toDate(req.body.releaseAt, RUOYU.dayjs().format());
+
+        if (articleId && title && html && content && releaseAt) {
+            const article = await getArticle({ articleId });
+            if (!article) {
+                RUOYU.res.error(res, { msg: "找不到该文章" });
+                return;
+            }
+
             html = formatCode(html);
             if (status === "draft") {
                 await setArticle({ articleId, title, html, content });
@@ -98,6 +97,7 @@ router.put("/", (req, res) => {
                 const images = toArray(req.body.images);
                 const password = toString(req.body.password, "");
                 const tags = toArray(req.body.tags, []);
+
                 if (sortId && images && password !== false && tags) {
                     const status = req.session.blog.status >= 30 ? 2 : 1;
                     await setArticle({
@@ -109,6 +109,7 @@ router.put("/", (req, res) => {
                         images,
                         password,
                         status,
+                        releaseAt: article.status === 0 ? releaseAt : article.releaseAt,
                     });
                     await delTagArticle(articleId);
                     tags.forEach(async (tagId) => {
@@ -144,11 +145,7 @@ router.put("/statusChange", (req, res) => {
         const articleId = toPInt(req.body.articleId);
         const status = toPInt(req.body.status);
         if (articleId && status !== false && [0, 3].includes(status)) {
-            const [changeRows] = await changeArticleStatus(
-                articleId,
-                req.session.blog.userId,
-                status
-            );
+            const [changeRows] = await changeArticleStatus(articleId, req.session.blog.userId, status);
             if (changeRows === 1) {
                 const count = await getArticleSortCount(req.session.blog.userId);
                 RUOYU.res.success(res, { count });

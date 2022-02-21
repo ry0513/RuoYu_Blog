@@ -3,7 +3,7 @@ import fs from "fs-extra";
 import { createHmac, createHash, createCipheriv, createDecipheriv } from "crypto";
 import { resolve } from "path";
 import { Response, Request } from "express";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 interface BaseConfig {
     /**
@@ -151,7 +151,7 @@ interface BaseFun {
     /**
      * @description dayjs工具
      */
-    dayjs: (date?: Date, format?: string) => string;
+    dayjs: (date?: Date, format?: string) => Dayjs;
     /**
      * @description 设置cookie
      */
@@ -229,8 +229,8 @@ const BaseFun: BaseFun = {
     path: (dir, ...other) => {
         return resolve(dir, ...other);
     },
-    dayjs: (date = new Date(), format = "YYYY-MM-DD HH:mm:ss") => {
-        return dayjs(date).format(format);
+    dayjs: (date = new Date()) => {
+        return dayjs(date);
     },
     setCookie: (res, key, val) => {
         res.cookie(encryptFun.encrypt(key), encryptFun.encrypt(val), { httpOnly: true });

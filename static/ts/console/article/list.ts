@@ -92,10 +92,10 @@ layui.use(["table", "util", "element"], () => {
                 },
 
                 {
-                    title: "创建时间",
+                    title: "发布时间",
                     width: 200,
-                    templet: ({ createdAt }) => {
-                        return util.toDateString(createdAt, "yyyy-MM-dd HH:mm:ss");
+                    templet: ({ releaseAt }) => {
+                        return releaseAt ? util.toDateString(releaseAt, "yyyy-MM-dd HH:mm:ss") : "未发布过";
                     },
                 },
 

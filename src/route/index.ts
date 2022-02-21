@@ -10,8 +10,8 @@ router.get("/", async (req, res) => {
     const limit = toPInt(req.query.limit, 10);
     if (page && limit) {
         const param = { status: [2] };
-        const articleList = await getArticleList(param, (page - 1) * limit, limit);
-        const articleCount = await getArticleCount(param);
+        const articleList = await getArticleList({ param, offset: (page - 1) * limit, limit, maxTime: new Date() });
+        const articleCount = await getArticleCount({ param });
         res.locals = {
             ...res.locals,
             page: "index",

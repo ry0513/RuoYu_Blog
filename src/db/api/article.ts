@@ -3,6 +3,7 @@ import Tag from "../modles/Tag";
 import Sort from "../modles/Sort";
 import TagArticle from "../modles/TagArticle";
 import { Sequelize } from "sequelize-typescript";
+import { Op } from "sequelize";
 
 /**
  * @description 获取文章
@@ -26,15 +27,30 @@ export const getArticle = (where: { articleId: number; userId?: number; status?:
 /**
  * @description 获取文章列表
  */
-export const getArticleList = (
-    where: { userId?: number; status?: Array<number> },
-    offset: number,
-    limit: number
-) => {
+
+export const getArticleList = ({
+    param,
+    attributes = [],
+    offset,
+    limit,
+    maxTime = "2099-12-31 23:59:59",
+    minTime = "2000-01-01 00:00:00",
+    isMe = false,
+}: {
+    param: { userId?: number; status?: Array<number> };
+    attributes?: Array<string>;
+    offset: number;
+    limit: number;
+    maxTime?: Date | string;
+    minTime?: Date | string;
+    isMe?: boolean;
+}) => {
+    const releaseAt = isMe ? { [Op.or]: { [Op.is]: null, [Op.between]: [new Date(minTime), new Date(maxTime)] } } : { [Op.between]: [new Date(minTime), new Date(maxTime)] };
+
     return Article.findAll({
         order: [["articleId", "DESC"]],
-        attributes: ["articleId", "title", "status", "password", "createdAt"],
-        where,
+        attributes: ["articleId", "title", "status", "releaseAt", ...attributes],
+        where: { ...param, releaseAt },
         include: [
             {
                 model: Tag,
@@ -76,9 +92,20 @@ export const getArticleSortCount = (userId: number) => {
 /**
  * @description 获取总文章数量
  */
-export const getArticleCount = (where: { userId?: number; status?: Array<number> }) => {
+export const getArticleCount = ({
+    param,
+    maxTime = "2099-12-31 23:59:59",
+    minTime = "2000-01-01 00:00:00",
+    isMe = false,
+}: {
+    param: { userId?: number; status?: Array<number> };
+    maxTime?: Date | string;
+    minTime?: Date | string;
+    isMe?: boolean;
+}) => {
+    const releaseAt = isMe ? { [Op.or]: { [Op.is]: null, [Op.between]: [new Date(minTime), new Date(maxTime)] } } : { [Op.between]: [new Date(minTime), new Date(maxTime)] };
     return Article.count({
-        where,
+        where: { ...param, releaseAt },
     });
 };
 
@@ -94,6 +121,7 @@ export const addArticle = (data: {
     images?: Array<string>;
     password?: string;
     status?: number;
+    releaseAt?: Date;
 }) => {
     return Article.create(data);
 };
@@ -113,6 +141,7 @@ export const setArticle = ({
     images?: Array<string>;
     password?: string;
     status?: number;
+    releaseAt?: Date | string;
 }) => {
     return Article.update(data, {
         where: {

@@ -22,9 +22,7 @@ export const getCity = (ip: string) => {
     return new Promise<string>((resolve) => {
         axios({
             method: "get",
-            url: `https://apis.map.qq.com/ws/location/v1/ip?ip=${ip}&key=${
-                RUOYU.TXDT.KEY
-            }&sig=${RUOYU.md5(
+            url: `https://apis.map.qq.com/ws/location/v1/ip?ip=${ip}&key=${RUOYU.TXDT.KEY}&sig=${RUOYU.md5(
                 `/ws/location/v1/ip?ip=${ip}&key=${RUOYU.TXDT.KEY}${RUOYU.TXDT.SK}`
             )}`,
         }).then(({ data: res }) => {
@@ -64,28 +62,34 @@ export const toPInt = (val: unknown, num?: number): number | false => {
         return num || false;
     }
 
-    return val
-        ? /^[0-9]*$/.test((val as string).toString()) && parseInt((val as string).toString())
-        : false;
+    return val ? /^[0-9]*$/.test((val as string).toString()) && parseInt((val as string).toString()) : false;
 };
 
 /**
  * @description 验证是否为数组，返回数组或false
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const toArray = (val: any, arr?: Array<any>): Array<any> | false => {
+export const toArray = (val: unknown, arr?: Array<any>): Array<any> | false => {
     if (val === undefined) {
         return arr || false;
     }
     return Array.isArray(val) ? val : false;
 };
 
+export const toDate = (val: string, date?: string) => {
+    if (val === undefined) {
+        return date || false;
+    }
+    const reg =
+        /^((\d{2}(([02468][048])|([13579][26]))[-/](((0[13578])|(1[02]))[-/](([012][0-9])|(3[01]))|((0[469])|(11))[-/](([0-2][0-9])|(30))|(02)[-/][012][0-9]))|(\d{4}[-/](((0[13578])|(1[02]))[-/](([012][0-9])|(3[01]))|((0[469])|(11))[-/](([012][0-9])|(30))|(02)[-/](([01][0-9])|(2[0-8])))))\s(([0-1][0-9])|(2[0-4]))(:[0-5][0-9]){2}$/;
+
+    return reg.test(val) ? val : false;
+};
+
 /**
  * @description 格式化UA数据
  */
-export const getUa = (
-    ua = ""
-): { ua: string; os: string; browser: string; device: string | null } => {
+export const getUa = (ua = ""): { ua: string; os: string; browser: string; device: string | null } => {
     const uaInfo = UAParser(ua);
     const browser = `${uaInfo.browser.name} ${uaInfo.browser.version || ""}`.trim();
     const os = `${uaInfo.os.name} ${uaInfo.os.version || ""}`.trim();
@@ -126,11 +130,7 @@ export const formatCode = (html: string): string => {
             if (lang === "text") {
                 $(ele).addClass(`language-${lang}`);
             } else if (Languages.indexOf(lang) !== -1) {
-                code = Prism.highlight(
-                    code.replace(/&lt;/g, "<").replace(/&gt;/g, ">"),
-                    Prism.languages[lang],
-                    lang
-                );
+                code = Prism.highlight(code.replace(/&lt;/g, "<").replace(/&gt;/g, ">"), Prism.languages[lang], lang);
             }
             $(ele).html(code + getLine(code));
             $(ele)
