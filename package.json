@@ -4,21 +4,21 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "build": "concurrently \"cd src && tsc\" \"cd static && tsc\"",
-    "dev": "npm run build && concurrently \"cd src && tsc --watch\" \"cd static && tsc --watch\" \"nodemon build/app\" \"ts-node static/ts/auto\"",
+    "build": "concurrently \"cd src && tsc\" \"cd static && tsc\" \"ts-node static/ts/auto\"",
+    "dev": "npm run build && concurrently \"cd src && tsc --watch\" \"cd static && tsc --watch\" \"nodemon build/app\" \"cross-env NODE_WATCH=dev ts-node static/ts/auto\"",
     "start": "node build/app",
     "dbinit": "cd src && tsc && cd ../ && node ./build/db/init"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ry0513/RUOYU_Blog.git"
+    "url": "git+https://github.com/ry0513/RuoYu_Blog.git"
   },
   "author": "ruoyu",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/ry0513/RUOYU_Blog/issues"
+    "url": "https://github.com/ry0513/RuoYu_Blog/issues"
   },
-  "homepage": "https://github.com/ry0513/RUOYU_Blog#readme",
+  "homepage": "https://github.com/ry0513/RuoYu_Blog#readme",
   "dependencies": {
     "axios": "^0.26.0",
     "cheerio": "^1.0.0-rc.10",
@@ -56,6 +56,7 @@
     "@typescript-eslint/eslint-plugin": "^5.10.1",
     "@typescript-eslint/parser": "^5.10.1",
     "concurrently": "^7.0.0",
+    "cross-env": "^7.0.3",
     "eslint": "^8.7.0",
     "node-sass": "^7.0.1",
     "uglify-js": "^3.15.1"
