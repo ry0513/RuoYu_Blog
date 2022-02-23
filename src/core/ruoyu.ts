@@ -84,7 +84,7 @@ interface BaseConfig {
     /**
      * @description  账户域名
      */
-    account: string;
+    accountUrl: string;
     /**
      * @description 对称加密-盐
      */

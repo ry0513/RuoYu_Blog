@@ -5,7 +5,7 @@ export default (app: Express) => {
         websiteTitle: "若",
         websiteDescription: "description",
         websiteKeywords: "keyword",
-
+        accountUrl: RUOYU.accountUrl,
         RUOYU: {
             title: "若",
             description: "description",

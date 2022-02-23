@@ -31,7 +31,7 @@ export const needLogin = async (minStatus: number, req: Request, res: Response, 
         res.render("error/403");
         return false;
     } else {
-        falseCallBack ? falseCallBack() : res.redirect(`${RUOYU.account}/login?path=${getUrl(req)}`);
+        falseCallBack ? falseCallBack() : res.redirect(`${RUOYU.accountUrl}/login?path=${getUrl(req)}`);
         return false;
     }
 };

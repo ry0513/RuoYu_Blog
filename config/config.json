@@ -6,7 +6,7 @@
 	"databaseUsername": "root",
 	"databasePassword": "root",
 	"httpPort": 3001,
-	"account": "http://127.0.0.1:3000",
+	"accountUrl": "http://127.0.0.1:3000",
 	"redisHost": "127.0.0.1",
 	"redisPort": 6379,
 	"redisPassword": "rrcj9364",

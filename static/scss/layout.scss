@@ -53,7 +53,6 @@ footer {
     }
 
     background: #202020;
-    font-size: 14px;
 }
 
 /* ==================
@@ -90,11 +89,33 @@ $spacing: (
 /* ==================
          颜色
   ==================== */
-$color: (-white: #ffffff, -grey: #f1f1f1, -red: #ff5722, -black: #393d49);
+$color: (
+    white: #ffffff,
+    grey: #f1f1f1,
+    red: #ff5722,
+    black: #393d49,
+);
 @each $colorName, $color in $color {
     @each $original, $abbrev in (background-color: bg, color: fc) {
-        .#{$abbrev}#{$colorName} {
+        .#{$abbrev}-#{$colorName} {
             #{$original}: $color;
         }
     }
+}
+
+/* ==================
+         字体大小
+  ==================== */
+$fontSize: (
+    14: 14px,
+    16: 16px,
+    18: 18px,
+    20: 20px,
+);
+@each $size, $px in $fontSize {
+    // @each $original, $abbrev in (background-color: bg, color: fc) {
+    .fs-#{$size} {
+        font-size: $px;
+    }
+    // }
 }

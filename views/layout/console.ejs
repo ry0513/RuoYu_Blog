@@ -17,16 +17,14 @@
     <body>
         <div class="layui-layout layui-layout-admin">
             <div class="layui-header header">
-                <a class="logo" href="/">
-                    <img src="https://image.tnloy.cn/image/01496a40743511ec8cb45df97702b9ae.png" alt="layui" />
-                </a>
+                <a class="logo" href="/"> Tnloy </a>
                 <ul class="layui-nav header-nav">
                     <li class="layui-nav-item">
                         <a href="javascript:;"><img src="<%= user.avatar %>" class="layui-nav-img" /><%= user.nickName %> </a>
                         <dl class="layui-nav-child">
                             <dd><a href="javascript:;">修改信息</a></dd>
                             <dd><a href="javascript:;">安全管理</a></dd>
-                            <dd><a href="javascript:;">退出</a></dd>
+                            <dd><a class="out" href="javascript:;">退出</a></dd>
                         </dl>
                     </li>
                 </ul>
@@ -54,13 +52,16 @@
 
             <div class="layui-body"><%- getBreadcrumb(menu,current) %> <%- include(`../pages/${page}`) _%></div>
         </div>
-
+        <script>
+            const accountUrl = "<%= accountUrl %>";
+        </script>
         <script src="<%= cdnUrl %>/plugin/layui/layui.min.js?v=<%= version %>"></script>
         <script src="<%= cdnUrl %>/plugin/qs/qs.min.js?v=<%= version %>"></script>
         <script src="<%= cdnUrl %>/plugin/axios/axios.min.js?v=<%= version %>"></script>
         <script src="<%= cdnUrl %>/plugin/notice/notice.min.js?v=<%= version %>"></script>
         <script src="<%= cdnUrl %>/js/ruoyu/tools.min.js?v=<%= version %>"></script>
         <script src="<%= cdnUrl %>/js/ruoyu/dom.min.js?v=<%= version %>"></script>
+        <script src="<%= cdnUrl %>/js/console/index.min.js?v=<%= version %>"></script>
         <%_ jsList.forEach(item => { _%>
         <script src="<%= cdnUrl %>/<%= item %>.min.js?v=<%= version %>"></script>
         <%_ }) _%>
