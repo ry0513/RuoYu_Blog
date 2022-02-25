@@ -84,7 +84,14 @@ export default (req: Request, res: Response) => {
                         remark: "系统生成的导航测试B_1",
                     },
                     {
-                        menuName: "我的标签",
+                        menuName: "审核标签",
+                        path: "/audit",
+                        isMenu: true,
+                        icon: "string",
+                        remark: "系统生成的导航测试B_1",
+                    },
+                    {
+                        menuName: "我的想法",
                         path: "/my",
                         isMenu: true,
                         icon: "string",

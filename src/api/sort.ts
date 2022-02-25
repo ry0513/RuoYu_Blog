@@ -25,7 +25,7 @@ router.get("/list", (req, res) => {
     });
 });
 
-//新增
+// 新增
 router.post("/", (req, res) => {
     needVerify(40, req, res, async () => {
         const content = toString(req.body.content);
@@ -36,6 +36,31 @@ router.post("/", (req, res) => {
             } else {
                 RUOYU.res.error(res, { msg: "分类已存在，无需重复创建" });
             }
+            return;
+        }
+        RUOYU.res.parameter(res);
+    });
+});
+
+// 更新
+router.put("/", (req, res) => {
+    needVerify(40, req, res, async () => {
+        const content = toString(req.body.content);
+        const sortId = toPInt(req.body.sortId);
+        if (content && sortId) {
+            const data = await getSort(sortId);
+            if (data) {
+                if (data.userId !== req.session.blog.userId && req.session.blog.status !== 1000) {
+                    RUOYU.res.error(res, { msg: "权限不足，非创建者" });
+                } else if (data.articles.length > 0) {
+                    RUOYU.res.error(res, { msg: "分类下尚有文章" });
+                } else {
+                    await delSort(sortId);
+                    RUOYU.res.success(res);
+                }
+                return;
+            }
+            RUOYU.res.error(res, { msg: "分类不存在，请尝试刷新页面" });
             return;
         }
         RUOYU.res.parameter(res);

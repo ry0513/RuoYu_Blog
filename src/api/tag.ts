@@ -16,7 +16,7 @@ router.get("/list", (req, res) => {
             if (user === "my") {
                 obj = { userId: req.session.blog.userId };
             }
-            const data = await getTagList(obj, (page - 1) * limit, limit);
+            const data = await getTagList(obj, (page - 1) * limit, limit, ["status", "reason", "reply"]);
             const count = await getTagCount(obj);
             RUOYU.res.success(res, { count, data });
             return;

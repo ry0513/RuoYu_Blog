@@ -48,15 +48,15 @@ layui.use(["table", "util", "form", "layer"], () => {
         ],
     });
 
-    table.on("tool(sort)", function (obj) {
-        if (obj.event === "del") {
+    table.on("tool(sort)", ({ data, event }) => {
+        if (event === "del") {
             layer.confirm("删除操作不可恢复，确定删除吗？", (index) => {
                 layer.load(2);
                 layer.close(index);
                 axios({
                     method: "delete",
                     url: "/api/sort",
-                    params: { sortId: obj.data.sortId },
+                    params: { sortId: data.sortId },
                 }).then(({ data: res }) => {
                     layer.closeAll("loading");
                     if (res.code === 0) {
@@ -72,10 +72,40 @@ layui.use(["table", "util", "form", "layer"], () => {
                     }
                 });
             });
-        } else if (obj.event === "edit") {
-            layer.confirm("还没做呢", function (index) {
-                // obj.del();
-                layer.close(index);
+        } else if (event === "edit") {
+            console.log(data);
+
+            layer.open({
+                type: 1,
+                title: "创建分类",
+                area: "375px",
+                content: $ry(".addSortFrom").html(),
+                success: (layero, index) => {
+                    $ry(".layui-layer .layui-input").val(data.content), form.render();
+                    form.on("submit(form)", ({ field }) => {
+                        layer.load(2);
+                        layer.close(index);
+                        field.sortId = data.sortId;
+                        axios({
+                            method: "put",
+                            url: "/api/sort",
+                            data: qs.stringify(data),
+                        }).then(({ data: res }) => {
+                            layer.closeAll("loading");
+                            if (res.code === 0) {
+                                $ryTools.notify({
+                                    description: res.msg,
+                                });
+                                table.reload("sortTable");
+                            } else {
+                                $ryTools.notify({
+                                    description: res.msg,
+                                    type: "error",
+                                });
+                            }
+                        });
+                    });
+                },
             });
         }
     });
@@ -88,13 +118,13 @@ layui.use(["table", "util", "form", "layer"], () => {
             content: $ry(".addSortFrom").html(),
             success: (layero, index) => {
                 form.render();
-                form.on("submit(form)", ({ field: data }) => {
+                form.on("submit(form)", ({ field }) => {
                     layer.load(2);
                     layer.close(index);
                     axios({
                         method: "post",
                         url: "/api/sort",
-                        data: qs.stringify(data),
+                        data: qs.stringify(field),
                     }).then(({ data: res }) => {
                         layer.closeAll("loading");
                         if (res.code === 0) {

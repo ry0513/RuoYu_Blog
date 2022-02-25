@@ -3,7 +3,7 @@ import Article from "../modles/Article";
 import User from "../modles/User";
 
 /**
- * @description 获取分类
+ * @description 获取全部分类
  */
 export const getSorts = () => {
     return Sort.findAll({ attributes: ["sortId", "content"] });
@@ -50,7 +50,7 @@ export const getSort = (sortId: number) => {
 };
 
 /**
- * @description 获取标签数量
+ * @description 获取分类数量
  */
 export const getSortCount = (where: { userId?: number }) => {
     return Sort.count({
@@ -59,7 +59,28 @@ export const getSortCount = (where: { userId?: number }) => {
 };
 
 /**
- * @description 删除指定标签
+ * @description 新增分类
+ */
+export const addSort = ({ content, userId }: Pick<Sort, "content" | "userId">) => {
+    return Sort.findOrCreate({ where: { content }, defaults: { content, userId } });
+};
+
+/**
+ * @description 修改指定分类
+ */
+export const setSort = (content: string, sortId: number) => {
+    return Sort.update(
+        { content },
+        {
+            where: {
+                sortId,
+            },
+        }
+    );
+};
+
+/**
+ * @description 删除指定分类
  */
 export const delSort = (sortId: number) => {
     return Sort.destroy({
@@ -67,11 +88,4 @@ export const delSort = (sortId: number) => {
             sortId,
         },
     });
-};
-
-/**
- * @description 新增标签
- */
-export const addSort = ({ content, userId }: Pick<Sort, "content" | "userId">) => {
-    return Sort.findOrCreate({ where: { content }, defaults: { content, userId } });
 };

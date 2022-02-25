@@ -12,9 +12,9 @@ export const getTags = () => {
 /**
  * @description 获取标签列表（包含对应关系+分页）
  */
-export const getTagList = (where: { userId?: number }, offset: number, limit: number) => {
+export const getTagList = (where: { userId?: number }, offset: number, limit: number, attributes: Array<string> = []) => {
     return Tag.findAll({
-        attributes: ["tagId", "content", "createdAt"],
+        attributes: ["tagId", "content", "createdAt", ...attributes],
         order: [["tagId", "DESC"]],
         where,
         offset,

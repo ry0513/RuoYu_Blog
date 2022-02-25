@@ -23,7 +23,7 @@ a {
 }
 
 /* ==================
-         Header
+    Header
   ==================== */
 header {
     position: fixed;
@@ -41,7 +41,7 @@ header {
     }
 }
 /* ==================
-         Footer
+    Footer
   ==================== */
 footer {
     .container {
@@ -56,7 +56,7 @@ footer {
 }
 
 /* ==================
-         间距
+    间距
   ==================== */
 $spacing: (
     10: 10px,
@@ -87,7 +87,7 @@ $spacing: (
 }
 
 /* ==================
-         颜色
+    颜色
   ==================== */
 $color: (
     white: #ffffff,
@@ -104,18 +104,26 @@ $color: (
 }
 
 /* ==================
-         字体大小
+    修改 layUI 样式
   ==================== */
-$fontSize: (
-    14: 14px,
-    16: 16px,
-    18: 18px,
-    20: 20px,
-);
-@each $size, $px in $fontSize {
-    // @each $original, $abbrev in (background-color: bg, color: fc) {
-    .fs-#{$size} {
-        font-size: $px;
-    }
-    // }
+.layui-layer-btn a.layui-layer-btn0 {
+    background-color: #009688;
+    border: 1px solid #009688;
+}
+.layui-form-label {
+    text-align: left;
+    width: 60px;
+}
+.layui-input-block {
+    margin-left: 90px;
+}
+.layui-textarea {
+    min-height: 75px;
+}
+.layui-form-item:last-child {
+    margin-bottom: 0;
+}
+
+.growl-notification {
+    z-index: 50000000;
 }
