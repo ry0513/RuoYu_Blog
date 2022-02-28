@@ -10,7 +10,7 @@ const router = Router();
 router.get("/list", (req, res) => {
     needVerify(10, req, res, async () => {
         const page = toPInt(req.query.page, { min: 1, def: 1 });
-        const limit = toPInt(req.query.limit, { scope: [10, 20, 30] });
+        const limit = toPInt(req.query.limit, { def: 10, scope: [10, 20, 30] });
         const status = toPInt(req.query.status, { scope: [0, 1, 2, 3] });
         if (page && limit) {
             const param = { userId: req.session.blog.userId, status: (status !== false && [status]) || [0, 1, 2] };

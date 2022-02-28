@@ -9,7 +9,7 @@ const router = Router();
 router.get("/list", (req, res) => {
     needVerify(10, req, res, async () => {
         const page = toPInt(req.query.page, { min: 1, def: 1 });
-        const limit = toPInt(req.query.limit, { scope: [10, 20, 30] });
+        const limit = toPInt(req.query.limit, { def: 10, scope: [10, 20, 30] });
         const user = toString(req.query.user);
         if (page && limit) {
             let obj: { userId?: number } = {};

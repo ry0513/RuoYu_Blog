@@ -16,11 +16,11 @@
 	"sessionName": "RUOYU_SESSION_ID",
 	"cookieDomain": "127.0.0.1",
 	"TXDT": {
-		"KEY": "6J2BZ-7W7C6-B52SA-MQCNX-TPUTF-xxxx",
-		"SK": "b6SfESd8wpjUGQfYg4kkFluzWixxxxxx"
+		"KEY": "6J2BZ-7W7C6-B52SA-MQCNX-TPUTF-WMBI3",
+		"SK": "MQtNiD7TEYMkfPDLtEdEEmXzikGY0aLx"
 	},
 	"aes": {
-		"key": "1234567812345678",
-		"iv": "1234567812345678"
+		"key": "MQtNiD7TEYMkfPDL",
+		"iv": "LtEdEEmXzikGY0aL"
 	}
 }
