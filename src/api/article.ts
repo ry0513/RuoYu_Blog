@@ -2,18 +2,18 @@ import { Router } from "express";
 import { needVerify } from "../core/permission";
 import RUOYU from "../core/ruoyu";
 import { toPInt, toString, toArray, formatCode, toDate } from "../core/tools";
-import { addArticle, addTagArticle, changeArticleStatus, delTagArticle, getArticle, getArticleCount, getArticleList, getArticleSortCount, setArticle } from "../db/api/article";
+import { addArticle, addTagArticle, changeArticleStatus, delTagArticleByArticleId, getArticle, getArticleCount, getArticleList, getArticleSortCount, setArticle } from "../db/api/article";
 import { getTag } from "../db/api/tag";
 const router = Router();
 
 // 列表
 router.get("/list", (req, res) => {
     needVerify(10, req, res, async () => {
-        const page = toPInt(req.query.page, 1);
-        const limit = toPInt(req.query.limit, 10);
-        const status = toArray(req.query.status);
+        const page = toPInt(req.query.page, { min: 1, def: 1 });
+        const limit = toPInt(req.query.limit, { scope: [10, 20, 30] });
+        const status = toPInt(req.query.status, { scope: [0, 1, 2, 3] });
         if (page && limit) {
-            const param = { userId: req.session.blog.userId, status: status || [0, 1, 2] };
+            const param = { userId: req.session.blog.userId, status: (status !== false && [status]) || [0, 1, 2] };
             const data = await getArticleList({ param, attributes: ["createdAt", "password"], offset: (page - 1) * limit, limit, isMe: true });
             const count = await getArticleCount({ param, isMe: true });
             RUOYU.res.success(res, { count, data });
@@ -26,10 +26,10 @@ router.get("/list", (req, res) => {
 // 新增
 router.post("/", (req, res) => {
     needVerify(20, req, res, async () => {
-        const title = toString(req.body.title);
+        const title = toString(req.body.title, { maxLength: 20, minLength: 5 });
         const html = toString(req.body.html);
         const content = toArray(req.body.content);
-        const status = toString(req.body.status);
+        const status = toString(req.body.status, { scope: ["draft", "release"] });
         if (title && html && content) {
             if (status === "draft") {
                 const { articleId } = await addArticle({
@@ -42,9 +42,9 @@ router.post("/", (req, res) => {
                 return;
             } else if (status === "release") {
                 const sortId = toPInt(req.body.sortId);
-                const images = toArray(req.body.images);
-                const password = toString(req.body.password, "");
-                const tags = toArray(req.body.tags, []);
+                const images = toArray(req.body.images, { type: "string", max: 100 });
+                const password = toString(req.body.password, { maxLength: 20, def: "" });
+                const tags = toArray(req.body.tags, { def: [], type: "number" });
                 if (sortId && images && password !== false && tags) {
                     const status = req.session.blog.status > 20 ? 2 : 1;
                     const { articleId } = await addArticle({
@@ -59,7 +59,7 @@ router.post("/", (req, res) => {
                         releaseAt: new Date(),
                     });
                     tags.forEach(async (tagId) => {
-                        (await getTag(tagId)) && (await addTagArticle({ tagId, articleId }));
+                        (await getTag({ tagId })) && (await addTagArticle({ tagId, articleId }));
                     });
                     RUOYU.res.success(res, { msg: "保存成功, 跳转中..." });
                     return;
@@ -73,11 +73,11 @@ router.post("/", (req, res) => {
 // 修改
 router.put("/", (req, res) => {
     needVerify(20, req, res, async () => {
-        const title = toString(req.body.title);
+        const title = toString(req.body.title, { maxLength: 20, minLength: 5 });
         let html = toString(req.body.html);
         const content = toArray(req.body.content);
         const articleId = toPInt(req.body.articleId);
-        const status = toString(req.body.status);
+        const status = toString(req.body.status, { scope: ["draft", "release"] });
         const releaseAt = toDate(req.body.releaseAt, RUOYU.dayjs().format());
 
         if (articleId && title && html && content && releaseAt) {
@@ -86,7 +86,6 @@ router.put("/", (req, res) => {
                 RUOYU.res.error(res, { msg: "找不到该文章" });
                 return;
             }
-
             html = formatCode(html);
             if (status === "draft") {
                 await setArticle({ articleId, title, html, content });
@@ -94,10 +93,12 @@ router.put("/", (req, res) => {
                 return;
             } else if (status === "release") {
                 const sortId = toPInt(req.body.sortId);
-                const images = toArray(req.body.images);
-                const password = toString(req.body.password, "");
-                const tags = toArray(req.body.tags, []);
+                const images = toArray(req.body.images, { type: "string", max: 100 });
+                const password = toString(req.body.password, { maxLength: 20, def: "" });
+                const tags = toArray(req.body.tags, { def: [], type: "number" });
+                console.log(req.body.tags);
 
+                console.log(tags);
                 if (sortId && images && password !== false && tags) {
                     const status = req.session.blog.status >= 30 ? 2 : 1;
                     await setArticle({
@@ -111,9 +112,9 @@ router.put("/", (req, res) => {
                         status,
                         releaseAt: article.status === 0 ? releaseAt : article.releaseAt,
                     });
-                    await delTagArticle(articleId);
+                    await delTagArticleByArticleId(articleId);
                     tags.forEach(async (tagId) => {
-                        (await getTag(tagId)) && (await addTagArticle({ tagId, articleId }));
+                        (await getTag({ tagId })) && (await addTagArticle({ tagId, articleId }));
                     });
                     RUOYU.res.success(res, { msg: "保存成功, 跳转中..." });
                     return;
@@ -143,7 +144,7 @@ router.get("/", (req, res) => {
 router.put("/statusChange", (req, res) => {
     needVerify(20, req, res, async () => {
         const articleId = toPInt(req.body.articleId);
-        const status = toPInt(req.body.status);
+        const status = toPInt(req.body.status, { scope: [0, 1, 2, 3] });
         if (articleId && status !== false && [0, 3].includes(status)) {
             const [changeRows] = await changeArticleStatus(articleId, req.session.blog.userId, status);
             if (changeRows === 1) {
@@ -157,9 +158,10 @@ router.put("/statusChange", (req, res) => {
         RUOYU.res.parameter(res);
     });
 });
+
 // 文章密码
 router.post("/password", async (req, res) => {
-    const password = toString(req.body.password);
+    const password = toString(req.body.password, { maxLength: 20 });
     const articleId = toPInt(req.body.articleId);
     if (password && articleId) {
         const article = await getArticle({ articleId });

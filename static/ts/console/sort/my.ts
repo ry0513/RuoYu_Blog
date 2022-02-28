@@ -5,7 +5,12 @@ layui.use(["table", "util", "form", "layer"], () => {
         id: "sortTable",
         elem: "#sort",
         url: "/api/sort/list?user=my",
-        page: true,
+        page: {
+            limits: [10, 20, 30],
+            layout: ["count", "limit", "prev", "page", "next"],
+            first: false,
+            last: false,
+        },
         cols: [
             [
                 {

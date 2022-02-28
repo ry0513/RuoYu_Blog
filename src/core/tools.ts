@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request } from "express";
 import axios from "axios";
 import RUOYU from "./ruoyu";
@@ -22,9 +23,7 @@ export const getCity = (ip: string) => {
     return new Promise<string>((resolve) => {
         axios({
             method: "get",
-            url: `https://apis.map.qq.com/ws/location/v1/ip?ip=${ip}&key=${RUOYU.TXDT.KEY}&sig=${RUOYU.md5(
-                `/ws/location/v1/ip?ip=${ip}&key=${RUOYU.TXDT.KEY}${RUOYU.TXDT.SK}`
-            )}`,
+            url: `https://apis.map.qq.com/ws/location/v1/ip?ip=${ip}&key=${RUOYU.TXDT.KEY}&sig=${RUOYU.md5(`/ws/location/v1/ip?ip=${ip}&key=${RUOYU.TXDT.KEY}${RUOYU.TXDT.SK}`)}`,
         }).then(({ data: res }) => {
             if (res.status) {
                 resolve("未知地区");
@@ -44,37 +43,80 @@ export const getUrl = (req: Request) => {
 };
 
 /**
- * @description 将参数转为字符串
+ * @description 验证是否为字符串并返回字符串
  */
-export const toString = (val: unknown, str?: string): string | false => {
+export const toString = (val: unknown, { maxLength, minLength, def, scope }: { maxLength?: number; minLength?: number; def?: string; scope?: Array<string> } = {}): string | false => {
     if (val === undefined) {
-        return str || false;
+        return def || false;
+    } else if (typeof val === "string") {
+        const str = val.toString();
+        if ((maxLength && maxLength < str.length) || (minLength && minLength > str.length) || (scope && !scope.includes(str))) {
+            return false;
+        }
+        return str;
     }
-
-    return val || val === "" ? (val as string).toString() : false;
+    return false;
 };
 
 /**
- * @description 验证是否为整数并转为数字
+ * @description 验证是否为正整数并转为数字
  */
-export const toPInt = (val: unknown, num?: number): number | false => {
+export const toPInt = (val: unknown, { max, min, def, scope }: { max?: number; min?: number; def?: number; scope?: Array<number> } = {}): number | false => {
     if (val === undefined) {
-        return num || false;
+        return def || false;
+    } else if (/^[0-9]+$/.test(val as string)) {
+        const num = parseInt(val as string);
+        if ((max && max < num) || (min && min > num) || (scope && !scope.includes(num))) {
+            return false;
+        }
+        return num;
     }
-
-    return val ? /^[0-9]*$/.test((val as string).toString()) && parseInt((val as string).toString()) : false;
+    return false;
 };
 
 /**
  * @description 验证是否为数组，返回数组或false
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const toArray = (val: unknown, arr?: Array<any>): Array<any> | false => {
+export const toArray = (
+    val: unknown,
+    { type, max, min, scope, def }: { type?: "string" | "number"; max?: number; min?: number; scope?: Array<number | string>; def?: Array<any> } = {}
+): Array<any> | false => {
     if (val === undefined) {
-        return arr || false;
+        return def || false;
+    } else if (Array.isArray(val)) {
+        if (type === "number") {
+            return (
+                (val.every((item) => {
+                    item;
+                    if (!/^[0-9]+$/.test(item as string) || (max && max < item) || (min && min > item) || (scope && !scope.includes(item))) {
+                        return false;
+                    }
+                    return true;
+                }) &&
+                    val.map((item) => {
+                        return parseInt(item);
+                    })) ||
+                false
+            );
+        } else if (type === "string") {
+            return (
+                (val.every((item) => {
+                    if (typeof item !== "string" || (max && max < item.length) || (min && min > item.length) || (scope && !scope.includes(item))) {
+                        return false;
+                    }
+                    return true;
+                }) &&
+                    val) ||
+                false
+            );
+        } else {
+            return val;
+        }
     }
-    return Array.isArray(val) ? val : false;
+    return false;
 };
+
+console.log(toArray([1.2], { type: "number" }));
 
 export const toDate = (val: string, date?: string) => {
     if (val === undefined) {
@@ -100,11 +142,7 @@ export const getUa = (ua = ""): { ua: string; os: string; browser: string; devic
 /**
  * @description 格式化数据
  */
-export const formatParam = (
-    val: string | number | false | Array<string | number>,
-    param: { [key: string]: string | number | Array<string | number> },
-    key: string
-): void => {
+export const formatParam = (val: string | number | false | Array<string | number>, param: { [key: string]: string | number | Array<string | number> }, key: string): void => {
     if (val !== false) param[key] = val;
 };
 

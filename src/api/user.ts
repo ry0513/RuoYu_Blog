@@ -7,7 +7,7 @@ const router = Router();
 
 // 注册
 router.post("/resister", async (req, res) => {
-    const nickName = toString(req.body.nickName);
+    const nickName = toString(req.body.nickName, { maxLength: 20 });
     if (nickName) {
         const { accountId: userId, avatar, status } = req.session.account;
         await createUser(req, userId, nickName, avatar, status);

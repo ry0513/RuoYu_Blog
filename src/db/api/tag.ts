@@ -1,6 +1,7 @@
 import Tag from "../modles/Tag";
 import Article from "../modles/Article";
 import User from "../modles/User";
+import TagArticle from "../modles/TagArticle";
 
 /**
  * @description 获取标签
@@ -35,11 +36,9 @@ export const getTagList = (where: { userId?: number }, offset: number, limit: nu
 /**
  * @description 获取指定标签
  */
-export const getTag = (tagId: number) => {
+export const getTag = (where: { tagId?: number; content?: string }) => {
     return Tag.findOne({
-        where: {
-            tagId,
-        },
+        where,
         include: [
             {
                 attributes: ["articleId"],
@@ -70,8 +69,33 @@ export const delTag = (tagId: number) => {
 };
 
 /**
+ * @description 编辑指定标签
+ */
+export const setTag = ({ tagId, content, reason, reply, status }: { tagId: number; content?: string; reason?: string; reply?: string; status?: 0 | 1 | 2 }) => {
+    return Tag.update(
+        { content, reason, reply, status },
+        {
+            where: {
+                tagId,
+            },
+        }
+    );
+};
+
+/**
  * @description 新增标签
  */
-export const addTag = ({ content, userId }: Pick<Tag, "content" | "userId">) => {
-    return Tag.findOrCreate({ where: { content }, defaults: { content, userId } });
+export const addTag = ({ content, userId, reason }: { content: string; userId: number; reason?: string; status: 0 | 1 | 2 }) => {
+    return Tag.findOrCreate({ where: { content }, defaults: { content, userId, reason } });
+};
+
+/**
+ * @description 删除标签文章对应关系
+ */
+export const delTagArticleByTagId = (tagId?: number) => {
+    return TagArticle.destroy({
+        where: {
+            tagId,
+        },
+    });
 };

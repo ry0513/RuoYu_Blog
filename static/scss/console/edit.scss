@@ -49,6 +49,14 @@ body {
     }
 }
 
+ul li {
+    list-style: disc;
+}
+
+ol li {
+    list-style: decimal;
+}
+
 @media screen and (max-width: 750px) {
     #content {
         #editor-container {

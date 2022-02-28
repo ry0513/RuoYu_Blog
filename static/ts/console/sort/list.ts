@@ -3,7 +3,12 @@ layui.use(["table", "util"], () => {
     table.render({
         elem: "#sort",
         url: "/api/sort/list",
-        page: true,
+        page: {
+            limits: [10, 20, 30],
+            layout: ["count", "limit", "prev", "page", "next"],
+            first: false,
+            last: false,
+        },
         cols: [
             [
                 {

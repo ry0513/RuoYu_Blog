@@ -8,8 +8,8 @@ const router = Router();
 // 列表
 router.get("/list", (req, res) => {
     needVerify(10, req, res, async () => {
-        const page = toPInt(req.query.page, 1);
-        const limit = toPInt(req.query.limit, 10);
+        const page = toPInt(req.query.page, { min: 1, def: 1 });
+        const limit = toPInt(req.query.limit, { scope: [10, 20, 30] });
         const user = toString(req.query.user);
         if (page && limit) {
             let param: { userId?: number } = {};
@@ -28,7 +28,7 @@ router.get("/list", (req, res) => {
 // 新增
 router.post("/", (req, res) => {
     needVerify(40, req, res, async () => {
-        const content = toString(req.body.content);
+        const content = toString(req.body.content, { maxLength: 10 });
         if (content) {
             const [, status] = await addSort({ content, userId: req.session.blog.userId });
             if (status) {
@@ -45,7 +45,7 @@ router.post("/", (req, res) => {
 // 更新
 router.put("/", (req, res) => {
     needVerify(40, req, res, async () => {
-        const content = toString(req.body.content);
+        const content = toString(req.body.content, { maxLength: 10 });
         const sortId = toPInt(req.body.sortId);
         if (content && sortId) {
             const data = await getSort(sortId);

@@ -186,7 +186,7 @@ export const addTagArticle = (data: { tagId: number; articleId: number }) => {
 /**
  * @description 删除标签文章对应关系
  */
-export const delTagArticle = (articleId: number) => {
+export const delTagArticleByArticleId = (articleId?: number) => {
     return TagArticle.destroy({
         where: {
             articleId,

@@ -7,7 +7,8 @@
     "build": "concurrently \"cd src && tsc\" \"cd static && tsc\" \"ts-node static/ts/auto\"",
     "dev": "npm run build && concurrently \"cd src && tsc --watch\" \"cd static && tsc --watch\" \"nodemon build/app\" \"cross-env NODE_WATCH=dev ts-node static/ts/auto\"",
     "start": "node build/app",
-    "dbinit": "cd src && tsc && cd ../ && node ./build/db/init"
+    "dbinit": "cd src && tsc && cd ../ && node ./build/db/init",
+    "auto": "cross-env NODE_WATCH=dev ts-node static/ts/auto"
   },
   "repository": {
     "type": "git",

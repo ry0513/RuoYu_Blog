@@ -34,7 +34,12 @@ layui.use(["table", "util", "element"], () => {
     table.render({
         elem: "#articleTable",
         url: "/api/article/list",
-        page: true,
+        page: {
+            limits: [10, 20, 30],
+            layout: ["count", "limit", "prev", "page", "next"],
+            first: false,
+            last: false,
+        },
         cols: [
             [
                 {
