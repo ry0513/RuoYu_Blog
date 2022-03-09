@@ -3,7 +3,8 @@ import { needVerify } from "../core/permission";
 import RUOYU from "../core/ruoyu";
 import { toPInt, toString, toArray, formatCode, toDate } from "../core/tools";
 import { addArticle, addTagArticle, changeArticleStatus, delTagArticleByArticleId, getArticle, getArticleCount, getArticleList, getArticleSortCount, setArticle } from "../db/api/article";
-import { getTag } from "../db/api/tag";
+import { getSorts } from "../db/api/sort";
+import { getTag, getTags } from "../db/api/tag";
 const router = Router();
 
 // 列表
@@ -96,9 +97,6 @@ router.put("/", (req, res) => {
                 const images = toArray(req.body.images, { type: "string", max: 100 });
                 const password = toString(req.body.password, { maxLength: 20, def: "" });
                 const tags = toArray(req.body.tags, { def: [], type: "number" });
-                console.log(req.body.tags);
-
-                console.log(tags);
                 if (sortId && images && password !== false && tags) {
                     const status = req.session.blog.status >= 30 ? 2 : 1;
                     await setArticle({
@@ -178,5 +176,12 @@ router.post("/password", async (req, res) => {
         return;
     }
     RUOYU.res.parameter(res);
+});
+
+// 新增编辑时文章弹窗信息
+router.get("/infoWindow", async (req, res) => {
+    const tags = await getTags();
+    const sorts = await getSorts();
+    RUOYU.res.success(res, { tags, sorts });
 });
 export default router;

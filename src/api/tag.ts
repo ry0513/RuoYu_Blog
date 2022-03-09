@@ -2,7 +2,7 @@ import { Router } from "express";
 import { needVerify } from "../core/permission";
 import RUOYU from "../core/ruoyu";
 import { toPInt, toString } from "../core/tools";
-import { addTag, delTag, delTagArticleByTagId, getTag, getTagCount, getTagList, setTag } from "../db/api/tag";
+import { addTag, delTag, delTagArticleByTagId, getTag, getTagCount, getTagList, getTags, setTag } from "../db/api/tag";
 const router = Router();
 
 // 列表
@@ -23,6 +23,12 @@ router.get("/list", (req, res) => {
         }
         RUOYU.res.parameter(res);
     });
+});
+
+// 全部(简略)
+router.get("/all", async (req, res) => {
+    const tags = await getTags();
+    RUOYU.res.success(res, { tags });
 });
 
 // 新增

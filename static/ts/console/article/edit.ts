@@ -1,6 +1,22 @@
 layui.use(["form", "layer"], async () => {
     const { form, layer } = layui;
     let timer: NodeJS.Timer;
+    let taglist = "";
+    let sortList = "";
+    (() => {
+        axios({
+            url: "/api/article/infoWindow",
+        }).then(({ data }) => {
+            data.tags.forEach(({ tagId, content }: { tagId: number; content: string }) => {
+                taglist += `<input type="checkbox" value="${tagId}" id="${tagId}" title="${content}" lay-skin="primary" />`;
+            });
+            data.sorts.forEach(({ sortId, content }: { sortId: number; content: string }) => {
+                sortList += `<option value="${sortId}">${content}</option>`;
+            });
+            console.log(sortList);
+        });
+    })();
+
     const article = (editor: IDomEditor, obj: { status?: string } = {}) => {
         const data = {
             title: $ry("#title").val(),
@@ -71,20 +87,10 @@ layui.use(["form", "layer"], async () => {
         MENU_CONF: {
             uploadImage: {
                 fieldName: "like-yuque-fileName",
-                base64LimitSize: 0.1 * 1024 * 1024, // 10M 以下插入 base64
+                base64LimitSize: 0.1 * 1024 * 1024, // 插入 base64
             },
             fontFamily: {
-                fontFamilyList: [
-                    "黑体",
-                    "仿宋",
-                    "楷体",
-                    "标楷体",
-                    "宋体",
-                    "微软雅黑",
-                    "Arial",
-                    "Tahoma",
-                    "Verdana",
-                ],
+                fontFamilyList: ["黑体", "仿宋", "楷体", "标楷体", "宋体", "微软雅黑", "Arial", "Tahoma", "Verdana"],
             },
             codeSelectLang: {
                 // 代码语言
@@ -170,28 +176,88 @@ layui.use(["form", "layer"], async () => {
         $ry(".release button").click(() => {
             if (verifyData()) {
                 layer.open({
-                    type: 1,
-                    title: "发布文章",
-                    area: "375px",
-                    content: $ry(".release-from").html(),
+                    title: "提交标签",
+                    btnAlign: "c",
+                    closeBtn: 0,
+                    content: `<div class="layui-form">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">封面图片</label>
+                        <div class="layui-input-block">
+                            <input
+                                type="text"
+                                name="images"
+                                required
+                                value="https://"
+                                lay-verify="url"
+                                placeholder="请输入图片链接"
+                                autocomplete="off"
+                                class="layui-input"
+                            />
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">所属分类</label>
+                        <div class="layui-input-block">
+                            <select name="sortId" lay-verify="required" class="sort">   
+                                ${sortList}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">文章标签</label>
+                        <div class="layui-input-block tag-box">
+                            <span class="layui-badge-rim">绿</span>
+                            <span class="layui-badge-rim">绿</span>
+                            <span class="layui-badge-rim">绿</span>
+                            <span class="layui-badge-rim">绿</span>
+                            <span class="layui-badge-rim">绿</span>
+                            <span class="layui-badge-rim">绿</span>
+                            <span class="layui-badge-rim">绿</span>
+                            <span class="layui-badge-rim">绿</span>
+                            <span class="layui-badge-rim">绿</span>
+                            <span class="layui-badge-rim">绿</span>
+                            
+                            <button type="button" class="layui-btn layui-btn-primary layui-btn-xs">
+                                <i class="layui-icon layui-icon-edit"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">查看密码</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="password" placeholder="不需要密码请不要填写" autocomplete="off" class="layui-input" />
+                        </div>
+                    </div>
+                </div>`,
+                    btn: ["确认", "取消"],
                     success: () => {
-                        $ry(".layui-layer-content [name=images]").val(images[0]);
-                        $ry(".layui-layer-content .sort").val(sortId);
-                        tags.forEach(({ tagId }) => {
-                            $ry(`.layui-layer-content #tag-${tagId}`).attr("checked", "true");
-                        });
                         form.render();
-                        form.on("submit(form)", ({ field: data }) => {
-                            data.tags = [];
-                            data.status = "release";
-                            data.images = [data.images];
-                            $ry(".layui-layer-content input[type=checkbox]:checked").each((el) => {
-                                data.tags.push((el as HTMLInputElement).value);
-                            });
-                            article(editor, data);
-                        });
                     },
                 });
+                // layer.open({
+                //     title: "发布文章",
+                //     btnAlign: "c",
+                //     closeBtn: 0,
+                //     content: $ry(".release-from").html(),
+                //     btn: ["确认", "取消"],
+                //     success: () => {
+                //         $ry(".layui-layer-content [name=images]").val(images[0]);
+                //         $ry(".layui-layer-content .sort").val(sortId);
+                //         tags.forEach(({ tagId }) => {
+                //             $ry(`.layui-layer-content #tag-${tagId}`).attr("checked", "true");
+                //         });
+                //         form.render();
+                //         form.on("submit(form)", ({ field: data }) => {
+                //             data.tags = [];
+                //             data.status = "release";
+                //             data.images = [data.images];
+                //             $ry(".layui-layer-content input[type=checkbox]:checked").each((el) => {
+                //                 data.tags.push((el as HTMLInputElement).value);
+                //             });
+                //             article(editor, data);
+                //         });
+                //     },
+                // });
             }
         });
         if (local) {

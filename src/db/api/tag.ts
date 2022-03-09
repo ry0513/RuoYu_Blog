@@ -7,7 +7,7 @@ import TagArticle from "../modles/TagArticle";
  * @description 获取标签
  */
 export const getTags = () => {
-    return Tag.findAll({ attributes: ["tagId", "content"] });
+    return Tag.findAll({ attributes: ["tagId", "content"], where: { status: 2 } });
 };
 
 /**

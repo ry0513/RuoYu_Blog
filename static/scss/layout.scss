@@ -115,7 +115,7 @@ $color: (
     width: 60px;
 }
 .layui-input-block {
-    margin-left: 90px;
+    margin-left: 60px;
 }
 .layui-textarea {
     min-height: 75px;
@@ -123,7 +123,16 @@ $color: (
 .layui-form-item:last-child {
     margin-bottom: 0;
 }
-
+.layui-form-label {
+    padding-left: 0;
+    padding-right: 0;
+}
+.layui-anim.layui-anim-upbit {
+    max-height: 100px;
+}
+.layui-layer-dialog {
+    max-width: 600px;
+}
 .growl-notification {
     z-index: 50000000;
 }

@@ -3,7 +3,6 @@ layui.use(["table", "util", "form", "layer"], () => {
     const openLayer = ({ content = "", reason = "", tagId }: { content?: string; reason?: string; tagId?: number } = {}) => {
         layer.open({
             title: "提交标签",
-            area: "350px",
             btnAlign: "c",
             closeBtn: 0, //右上角的关闭
             content: `<div class="layui-form">
