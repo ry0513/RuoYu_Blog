@@ -1,7 +1,11 @@
 <template>
     <t-breadcrumb class="breadcrumb">
         <template #default>
-            <t-breadcrumbItem v-for="(item) in a" :key="item.name" :to="item.path">
+            <t-breadcrumbItem
+                v-for="item in routeList"
+                :key="item.name"
+                :to="item.path"
+            >
                 {{ item.meta.title }}
             </t-breadcrumbItem>
         </template>
@@ -12,13 +16,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 
-const a = computed(() => {
-    return useRoute().matched
-})
-console.log(a.value);
+const routeList = computed(() => {
+    return useRoute().matched;
+});
 </script>
 <style lang="scss" scoped>
 .separator {

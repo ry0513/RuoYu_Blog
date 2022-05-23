@@ -1,16 +1,34 @@
 <template>
     <t-card :bordered="false">
-        <t-form ref="form" :data="formData" :label-width="80" layout="inline" colon>
+        <t-form
+            ref="form"
+            :data="formData"
+            :label-width="80"
+            layout="inline"
+            colon
+            class="ry-card_top"
+        >
             <t-form-item label="文章状态" name="status">
-                <t-select v-model="formData.status" class="form-item-content" :options="ARTICLE_STATUS_OPTIONS"
-                    clearable placeholder="请选择" />
+                <t-select
+                    v-model="formData.status"
+                    class="form-item-content"
+                    :options="ARTICLE_STATUS_OPTIONS"
+                    clearable
+                    placeholder="请选择"
+                />
             </t-form-item>
             <!-- <t-form-item label="合同名称" name="name">
                 <t-input v-model="formData.name" class="form-item-content" type="search" placeholder="标题" clearable />
             </t-form-item> -->
         </t-form>
         <div class="table-container">
-            <t-table :data="tableData" :columns="TABLE_COLUMNS" row-key="articleId" bordered :pagination="pagination">
+            <t-table
+                :data="tableData"
+                :columns="TABLE_COLUMNS"
+                row-key="articleId"
+                bordered
+                :pagination="pagination"
+            >
                 <template #sort="{ row }">
                     {{ row.sort?.content || "未分类" }}
                 </template>
@@ -18,7 +36,13 @@
                     {{ getOptionsLabel(ARTICLE_STATUS_OPTIONS, row.status) }}
                 </template>
                 <template #tags="{ row }">
-                    <t-tag theme="primary" class="tags" variant="light" v-for="(item, index) in row.tags" :key="index">
+                    <t-tag
+                        theme="primary"
+                        class="tags"
+                        variant="light"
+                        v-for="(item, index) in row.tags"
+                        :key="index"
+                    >
                         {{ item.content }}
                     </t-tag>
                 </template>
@@ -26,7 +50,9 @@
                     {{ row.password || "无需密码" }}
                 </template>
                 <template #op="slotProps">
-                    <a class="t-button-link" @click="rehandleClickOp(slotProps)">管理</a>
+                    <a class="t-button-link" @click="rehandleClickOp(slotProps)"
+                        >管理</a
+                    >
                     <!-- <a class="t-button-link" @click="handleClickDelete(slotProps)">删除</a> -->
                 </template>
             </t-table>
@@ -56,7 +82,12 @@ const TABLE_COLUMNS = [
     { title: "标题", minWidth: "150", colKey: "title" },
     { title: "状态", width: "200", colKey: "status", cell: { col: "status" } },
     { title: "标签", width: "200", colKey: "tags", cell: { col: "tags" } },
-    { title: "密码", width: "150", colKey: "password", cell: { col: "password" } },
+    {
+        title: "密码",
+        width: "150",
+        colKey: "password",
+        cell: { col: "password" }
+    },
     { title: "发布时间", width: "200", colKey: "releaseAt" },
     { align: "left", width: "200", colKey: "op", title: "操作" }
 ];
@@ -64,7 +95,7 @@ const TABLE_COLUMNS = [
 const pagination = ref({
     defaultPageSize: 20,
     total: 100,
-    defaultCurrent: 1,
+    defaultCurrent: 1
 });
 
 const tableData = ref([

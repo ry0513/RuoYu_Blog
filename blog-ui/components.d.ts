@@ -7,6 +7,7 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     999: typeof import('./src/components/card/999.vue')['default']
     Card: typeof import('./src/components/card/index.vue')['default']
+    Editor: typeof import('./src/components/editor/index.vue')['default']
     'Index copy': typeof import('./src/components/card/index copy.vue')['default']
     Index1: typeof import('./src/components/card/index1.vue')['default']
     Index6: typeof import('./src/components/card/index6.vue')['default']

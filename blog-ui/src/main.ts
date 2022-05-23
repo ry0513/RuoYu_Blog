@@ -9,6 +9,7 @@ import { store } from "./store";
 
 // import TDesign from 'tdesign-vue-next';
 import "tdesign-vue-next/es/style/index.css";
+import "@/style/ry.scss";
 
 const app = createApp(App);
 app.use(router);
