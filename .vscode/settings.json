@@ -1,7 +1,0 @@
-{
-    "prettier.tabWidth": 4,
-    "prettier.printWidth": 200,
-    "path-intellisense.mappings": {
-        "<% cdnUrl %>": "${workspaceRoot}/static"
-    }
-}
