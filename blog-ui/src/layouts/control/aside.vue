@@ -1,6 +1,6 @@
 <template>
     <t-aside>
-        <t-menu :default-value="active" :expanded="expanded">
+        <t-menu :default-value="active" :default-expanded="expanded">
             <MenuContent :menu="menu"></MenuContent>
         </t-menu>
     </t-aside>
