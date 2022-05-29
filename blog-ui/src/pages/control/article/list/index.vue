@@ -1,12 +1,11 @@
 <template>
-    <t-card :bordered="false">
+    <t-card :bordered="false" class="ry-card">
         <t-form
             ref="form"
             :data="formData"
             :label-width="80"
             layout="inline"
             colon
-            class="ry-card_top"
         >
             <t-form-item label="文章状态" name="status">
                 <t-select
@@ -73,7 +72,7 @@ import { ARTICLE_STATUS_OPTIONS, getOptionsLabel } from "@/options/active";
 
 const formData = ref({
     status: "",
-    name: ""
+    name: "",
 });
 
 const TABLE_COLUMNS = [
@@ -86,16 +85,16 @@ const TABLE_COLUMNS = [
         title: "密码",
         width: "150",
         colKey: "password",
-        cell: { col: "password" }
+        cell: { col: "password" },
     },
     { title: "发布时间", width: "200", colKey: "releaseAt" },
-    { align: "left", width: "200", colKey: "op", title: "操作" }
+    { align: "left", width: "200", colKey: "op", title: "操作" },
 ];
 
 const pagination = ref({
     defaultPageSize: 20,
     total: 100,
-    defaultCurrent: 1
+    defaultCurrent: 1,
 });
 
 const tableData = ref([
@@ -114,14 +113,14 @@ const tableData = ref([
                     tagId: 1,
                     articleId: 6,
                     createdAt: "2022-03-09T06:00:23.000Z",
-                    updatedAt: "2022-03-09T06:00:23.000Z"
-                }
-            }
+                    updatedAt: "2022-03-09T06:00:23.000Z",
+                },
+            },
         ],
         sort: {
             sortId: 1,
-            content: "全部"
-        }
+            content: "全部",
+        },
     },
     {
         articleId: 5,
@@ -138,14 +137,14 @@ const tableData = ref([
                     tagId: 1,
                     articleId: 5,
                     createdAt: "2022-03-08T03:12:29.000Z",
-                    updatedAt: "2022-03-08T03:12:29.000Z"
-                }
-            }
+                    updatedAt: "2022-03-08T03:12:29.000Z",
+                },
+            },
         ],
         sort: {
             sortId: 1,
-            content: "全部"
-        }
+            content: "全部",
+        },
     },
     {
         articleId: 4,
@@ -155,7 +154,7 @@ const tableData = ref([
         createdAt: "2022-02-28T00:46:23.000Z",
         password: null,
         tags: [],
-        sort: null
+        sort: null,
     },
     {
         articleId: 3,
@@ -172,8 +171,8 @@ const tableData = ref([
                     tagId: 1,
                     articleId: 3,
                     createdAt: "2022-02-22T09:18:17.000Z",
-                    updatedAt: "2022-02-22T09:18:17.000Z"
-                }
+                    updatedAt: "2022-02-22T09:18:17.000Z",
+                },
             },
             {
                 tagId: 3,
@@ -182,14 +181,14 @@ const tableData = ref([
                     tagId: 3,
                     articleId: 3,
                     createdAt: "2022-02-22T09:18:17.000Z",
-                    updatedAt: "2022-02-22T09:18:17.000Z"
-                }
-            }
+                    updatedAt: "2022-02-22T09:18:17.000Z",
+                },
+            },
         ],
         sort: {
             sortId: 1,
-            content: "全部"
-        }
+            content: "全部",
+        },
     },
     {
         articleId: 2,
@@ -206,8 +205,8 @@ const tableData = ref([
                     tagId: 1,
                     articleId: 2,
                     createdAt: "2022-03-09T03:44:16.000Z",
-                    updatedAt: "2022-03-09T03:44:16.000Z"
-                }
+                    updatedAt: "2022-03-09T03:44:16.000Z",
+                },
             },
             {
                 tagId: 4,
@@ -216,14 +215,14 @@ const tableData = ref([
                     tagId: 4,
                     articleId: 2,
                     createdAt: "2022-03-09T03:44:16.000Z",
-                    updatedAt: "2022-03-09T03:44:16.000Z"
-                }
-            }
+                    updatedAt: "2022-03-09T03:44:16.000Z",
+                },
+            },
         ],
         sort: {
             sortId: 1,
-            content: "全部"
-        }
+            content: "全部",
+        },
     },
     {
         articleId: 1,
@@ -240,8 +239,8 @@ const tableData = ref([
                     tagId: 1,
                     articleId: 1,
                     createdAt: "2022-02-22T09:17:40.000Z",
-                    updatedAt: "2022-02-22T09:17:40.000Z"
-                }
+                    updatedAt: "2022-02-22T09:17:40.000Z",
+                },
             },
             {
                 tagId: 2,
@@ -250,15 +249,15 @@ const tableData = ref([
                     tagId: 2,
                     articleId: 1,
                     createdAt: "2022-02-22T09:17:40.000Z",
-                    updatedAt: "2022-02-22T09:17:40.000Z"
-                }
-            }
+                    updatedAt: "2022-02-22T09:17:40.000Z",
+                },
+            },
         ],
         sort: {
             sortId: 1,
-            content: "全部"
-        }
-    }
+            content: "全部",
+        },
+    },
 ]);
 
 const onReset = (val: any) => {

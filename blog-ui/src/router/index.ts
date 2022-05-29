@@ -1,9 +1,5 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 
-import controlRouter from "./modules/control";
-
-export const asyncRouterList: Array<RouteRecordRaw> = [...controlRouter];
-
 // 存放固定的路由
 const defaultRouterList: Array<RouteRecordRaw> = [
     {

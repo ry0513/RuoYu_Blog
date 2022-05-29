@@ -33,15 +33,6 @@ router.get("/userInfo", async ({ session: { account } }, res) => {
                         },
                     },
                     {
-                        path: "test1",
-                        name: "test1",
-                        component: "pages/control/test1/index",
-                        meta: {
-                            title: "test 1",
-                            icon: "",
-                        },
-                    },
-                    {
                         path: "article",
                         name: "controlArticle",
                         component: "layouts/blank",
@@ -69,62 +60,6 @@ router.get("/userInfo", async ({ session: { account } }, res) => {
                                     icon: "",
                                     // full: true,
                                 },
-                            },
-                        ],
-                    },
-
-                    {
-                        path: "test",
-                        name: "controlTest",
-                        component: "layouts/blank",
-                        meta: {
-                            title: "合集 a  ",
-                            icon: "",
-                        },
-                        children: [
-                            {
-                                path: "home",
-                                name: "controlTestHome",
-                                component: "pages/control/test/index",
-                                meta: {
-                                    title: "合集A-a",
-                                    icon: "",
-                                },
-                            },
-                            {
-                                path: "http://www.baidu.com",
-                                redirect: "http://www.bilibili.com",
-                                name: "baidu",
-                                meta: { title: "百度外联", icon: "" },
-                            },
-                        ],
-                    },
-                    {
-                        path: "test2",
-                        name: "controlTest2",
-                        component: "layouts/blank",
-                        // component: () => import("@/pages/control/home/index.vue"),
-                        meta: {
-                            title: "合集 a 2 ",
-                            icon: "",
-                            component: "layouts/blank",
-                        },
-                        children: [
-                            {
-                                path: "home",
-                                name: "controlTest2Home",
-                                component: "pages/control/test/index",
-                                meta: {
-                                    title: "合集A-a 2",
-                                    icon: "",
-                                    component: "pages/control/test/index",
-                                },
-                            },
-                            {
-                                path: "http://www.baidu.com",
-                                redirect: "http://www.bilibili.com",
-                                name: "baidu2",
-                                meta: { title: "百度外联2", icon: "" },
                             },
                         ],
                     },

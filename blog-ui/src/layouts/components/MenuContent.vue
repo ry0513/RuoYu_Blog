@@ -19,39 +19,41 @@
                 <template #icon>
                     <t-icon :name="item.meta?.icon" />
                 </template>
-                <MenuContent :menu="item.children" :path="item.path"></MenuContent>
+                <MenuContent
+                    :menu="item.children"
+                    :path="item.path"
+                ></MenuContent>
             </t-submenu>
         </template>
     </template>
 </template>
 <script setup lang="ts">
-import { defineComponent, PropType } from 'vue';
-import { RouteRecordRaw } from 'vue-router';
+import { PropType } from "vue";
+import { RouteRecordRaw } from "vue-router";
 
-defineComponent({
-    name: 'MenuContent',
-});
+// 父组件传值
 defineProps({
     menu: {
         type: Array as PropType<RouteRecordRaw[]>,
-        required: true
+        required: true,
     },
     path: {
         type: String,
-        default: '/control'
+        default: "/control",
     },
 });
 
+// 事件 生成侧边目录
 const formatMenu = (list: RouteRecordRaw[], basePath: string = "/control") => {
     if (!list) {
         return [];
     }
-    const s = list
+    return list
         .map((item) => {
             let path = basePath ? `${basePath}/${item.path}` : item.path;
             const href = path.match(/(http|https):\/\/([\w.]+\/?)\S*/);
             if (href) {
-                path = href?.[0]
+                path = href?.[0];
             }
             return {
                 href,
@@ -64,11 +66,5 @@ const formatMenu = (list: RouteRecordRaw[], basePath: string = "/control") => {
             };
         })
         .filter((item) => item.meta && item.meta.hidden !== true);
-    return s
-}
-
-
-
-
-// const menu = props.menu
+};
 </script>

@@ -5,12 +5,8 @@ import '@vue/runtime-core'
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
-    999: typeof import('./src/components/card/999.vue')['default']
     Card: typeof import('./src/components/card/index.vue')['default']
     Editor: typeof import('./src/components/editor/index.vue')['default']
-    'Index copy': typeof import('./src/components/card/index copy.vue')['default']
-    Index1: typeof import('./src/components/card/index1.vue')['default']
-    Index6: typeof import('./src/components/card/index6.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TAside: typeof import('tdesign-vue-next')['Aside']
@@ -18,13 +14,13 @@ declare module '@vue/runtime-core' {
     TBreadcrumbItem: typeof import('tdesign-vue-next')['BreadcrumbItem']
     TButton: typeof import('tdesign-vue-next')['Button']
     TCard: typeof import('tdesign-vue-next')['Card']
-    TCol: typeof import('tdesign-vue-next')['Col']
+    TCheckbox: typeof import('tdesign-vue-next')['Checkbox']
+    TCheckboxGroup: typeof import('tdesign-vue-next')['CheckboxGroup']
     TContent: typeof import('tdesign-vue-next')['Content']
+    TDialog: typeof import('tdesign-vue-next')['Dialog']
     TDropdown: typeof import('tdesign-vue-next')['Dropdown']
     TDropdownItem: typeof import('tdesign-vue-next')['DropdownItem']
     TDropdownMenu: typeof import('tdesign-vue-next')['DropdownMenu']
-    Test: typeof import('./src/components/card/test.vue')['default']
-    Test2: typeof import('./src/components/card/test2.vue')['default']
     TForm: typeof import('tdesign-vue-next')['Form']
     TFormItem: typeof import('tdesign-vue-next')['FormItem']
     THeader: typeof import('tdesign-vue-next')['Header']
@@ -34,12 +30,13 @@ declare module '@vue/runtime-core' {
     TLayout: typeof import('tdesign-vue-next')['Layout']
     TMenu: typeof import('tdesign-vue-next')['Menu']
     TMenuItem: typeof import('tdesign-vue-next')['MenuItem']
-    TRow: typeof import('tdesign-vue-next')['Row']
+    TOption: typeof import('tdesign-vue-next')['Option']
+    TRadioButton: typeof import('tdesign-vue-next')['RadioButton']
+    TRadioGroup: typeof import('tdesign-vue-next')['RadioGroup']
     TSelect: typeof import('tdesign-vue-next')['Select']
     TSubmenu: typeof import('tdesign-vue-next')['Submenu']
     TTable: typeof import('tdesign-vue-next')['Table']
     TTag: typeof import('tdesign-vue-next')['Tag']
-    Undefined: typeof import('./src/components/index.vue')['default']
   }
 }
 

@@ -32,7 +32,7 @@ export default class Tag extends Model {
     userId!: number;
 
     @Default(0)
-    @Column({ type: DataType.INTEGER, comment: "状态[0审核中1驳回2正常]" })
+    @Column({ type: DataType.INTEGER, comment: "状态[0审核中，1驳回，2正常]" })
     status!: number;
 
     @Column({ type: DataType.STRING, comment: "理由" })

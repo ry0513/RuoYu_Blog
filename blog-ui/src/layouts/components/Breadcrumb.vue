@@ -19,6 +19,7 @@
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 
+// 计算属性 用于面包屑的数组
 const routeList = computed(() => {
     return useRoute().matched;
 });

@@ -53,6 +53,9 @@ export default class Article extends Model {
         return JSON.parse(this.getDataValue("content") || "[{}]");
     }
 
+    @Column({ type: DataType.INTEGER, comment: "类型[1一图，2二图，3三图]" })
+    type!: string;
+
     @Column({ type: DataType.STRING, comment: "封面图片" })
     set images(val: Array<object>) {
         this.setDataValue("images", JSON.stringify(val));
@@ -70,7 +73,7 @@ export default class Article extends Model {
     @Default(0)
     @Column({
         type: DataType.INTEGER,
-        comment: "状态[0草稿1审核中2发布3回收站]",
+        comment: "状态[0草稿，1审核中，2发布，3回收站]",
     })
     status!: number;
 

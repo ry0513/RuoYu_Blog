@@ -1,6 +1,5 @@
 <template>
     <div class="editor">
-        {{ valueHtml }}
         <Toolbar
             id="editor-toolbar"
             :editor="editorRef"
@@ -11,49 +10,29 @@
             id="editor-content"
             v-model="valueHtml"
             :defaultConfig="editorConfig"
-            @onCreated="handleCreated"
+            @onCreated="onCreated"
+            @onChange="(editor) => $emit('onChange', editor.getHtml())"
         />
     </div>
 </template>
 
 <script setup lang="ts">
-import "@wangeditor/editor/dist/css/style.css"; // 引入 css
+import { onBeforeUnmount, shallowRef } from "vue";
 
-import {
-    onBeforeUnmount,
-    ref,
-    shallowRef,
-    onMounted,
-    PropType,
-    watchEffect,
-    reactive
-} from "vue";
+// 编辑器
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
+import { IDomEditor } from "@wangeditor/editor";
+import "@wangeditor/editor/dist/css/style.css";
 
-const props = defineProps({
-    valueHtml: {
-        type: String,
-        default: ""
-    }
-});
+// 父组件传值
+defineProps<{ valueHtml: string }>();
+defineEmits(["onChange"]);
 
-let valueHtml = "";
-// watchEffect(() => {
-//     valueHtml = props.valueHtml;
-// });
-
+// 定义 富文本配置
 const editorRef = shallowRef();
-// 内容 HTML
-
-// 模拟 ajax 异步获取内容
-// onMounted(() => {
-//     setTimeout(() => {
-//         valueHtml.value = props.aaaHtml;
-//     }, 1500);
-// });
-
 const toolbarConfig = {};
 const editorConfig = {
+    autoFocus: false,
     placeholder: "请输入内容...",
     scroll: false,
     MENU_CONF: {
@@ -68,8 +47,8 @@ const editorConfig = {
                 "微软雅黑",
                 "Arial",
                 "Tahoma",
-                "Verdana"
-            ]
+                "Verdana",
+            ],
         },
         codeSelectLang: {
             // 代码语言
@@ -81,23 +60,25 @@ const editorConfig = {
                 { text: "Java", value: "java" },
                 { text: "PHP", value: "php" },
                 { text: "SQL", value: "sql" },
-                { text: "Bash", value: "bash" }
+                { text: "Bash", value: "bash" },
                 // 其他
-            ]
-        }
-    }
+            ],
+        },
+    },
 };
 
-// 组件销毁时，也及时销毁编辑器
+// 事件 编辑器创建成功
+const onCreated = (editor: IDomEditor) => {
+    editorRef.value = editor;
+};
+
+// 组件销毁
 onBeforeUnmount(() => {
+    // 销毁编辑器
     const editor = editorRef.value;
     if (editor == null) return;
     editor.destroy();
 });
-
-const handleCreated = (editor: any) => {
-    editorRef.value = editor; // 记录 editor 实例，重要！
-};
 </script>
 
 <style lang="scss" scoped>
