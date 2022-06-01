@@ -68,7 +68,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { ARTICLE_STATUS_OPTIONS, getOptionsLabel } from "@/options/active";
+import { ARTICLE_STATUS_OPTIONS, getOptionsLabel } from "@/options/index";
 
 const formData = ref({
     status: "",
@@ -76,10 +76,10 @@ const formData = ref({
 });
 
 const TABLE_COLUMNS = [
-    { title: "ID", width: "100", align: "left", colKey: "articleId" },
+    { title: "ID", width: "100", align: "center", colKey: "articleId" },
     { title: "分类", width: "100", colKey: "sort" },
-    { title: "标题", minWidth: "150", colKey: "title" },
-    { title: "状态", width: "200", colKey: "status", cell: { col: "status" } },
+    { title: "标题", Width: "150", colKey: "title" },
+    { title: "状态", width: "100", colKey: "status", cell: { col: "status" } },
     { title: "标签", width: "200", colKey: "tags", cell: { col: "tags" } },
     {
         title: "密码",

@@ -27,6 +27,9 @@ export default class Tag extends Model {
     @Column({ type: DataType.STRING, comment: "标签名称" })
     content!: string;
 
+    @Column({ type: DataType.STRING, comment: "理由" })
+    reason!: string;
+
     @ForeignKey(() => User)
     @Column({ type: DataType.INTEGER, comment: "创建者" })
     userId!: number;
@@ -35,11 +38,8 @@ export default class Tag extends Model {
     @Column({ type: DataType.INTEGER, comment: "状态[0审核中，1驳回，2正常]" })
     status!: number;
 
-    @Column({ type: DataType.STRING, comment: "理由" })
-    reason!: string;
-
-    @Column({ type: DataType.STRING, comment: "回复" })
-    reply!: string;
+    @Column({ type: DataType.STRING, comment: "备注" })
+    remark!: string;
 
     @BelongsTo(() => User)
     user!: User;

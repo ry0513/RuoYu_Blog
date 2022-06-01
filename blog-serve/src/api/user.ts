@@ -36,14 +36,14 @@ router.get("/userInfo", async ({ session: { account } }, res) => {
                         path: "article",
                         name: "controlArticle",
                         component: "layouts/blank",
-                        redirect: "/control/article/home",
+                        redirect: "/control/article/list",
                         meta: {
                             title: "文章管理",
                             icon: "",
                         },
                         children: [
                             {
-                                path: "home",
+                                path: "list",
                                 name: "controlArticleList",
                                 component: "pages/control/article/list/index",
                                 meta: {
@@ -59,6 +59,27 @@ router.get("/userInfo", async ({ session: { account } }, res) => {
                                     title: "新增文章",
                                     icon: "",
                                     // full: true,
+                                },
+                            },
+                        ],
+                    },
+                    {
+                        path: "tag",
+                        name: "controlTag",
+                        component: "layouts/blank",
+                        redirect: "/control/tag/list",
+                        meta: {
+                            title: "标签管理",
+                            icon: "",
+                        },
+                        children: [
+                            {
+                                path: "list",
+                                name: "controlTagList",
+                                component: "pages/control/tag/list/index",
+                                meta: {
+                                    title: "Tag列表",
+                                    icon: "",
                                 },
                             },
                         ],
