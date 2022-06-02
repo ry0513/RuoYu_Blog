@@ -6,4 +6,4 @@ type GetUser = (
     attributes?: Array<UserAttributes>
 ) => Promise<User | null>;
 
-type CreateUser = (data: Pick<User, "userId">) => Promise<User>;
+type CreateUser = (data: Pick<User, "userId" | "ip">) => Promise<User>;

@@ -1,7 +1,23 @@
 import { RouteRecordRaw } from "vue-router";
 
 const routeAllPathToCompMap = import.meta.glob(`../**/*.vue`);
+
 const formatRoute = (list: Array<RouteRecordRaw>): Array<RouteRecordRaw> => {
+    const newList = formatRouteList(list);
+
+    newList.push({
+        path: "/:w+",
+        name: "404",
+        component: () => import(`@/pages/error/404.vue`),
+    });
+
+    console.log(newList);
+    return newList;
+};
+
+const formatRouteList = (
+    list: Array<RouteRecordRaw>
+): Array<RouteRecordRaw> => {
     const newList: Array<RouteRecordRaw> = [];
     list.filter((item) => {
         const route: RouteRecordRaw = {
@@ -14,7 +30,7 @@ const formatRoute = (list: Array<RouteRecordRaw>): Array<RouteRecordRaw> => {
             route.redirect = item.redirect;
         }
         if (item.children) {
-            route.children = formatRoute(item.children);
+            route.children = formatRouteList(item.children);
         }
         newList.push(route);
     });

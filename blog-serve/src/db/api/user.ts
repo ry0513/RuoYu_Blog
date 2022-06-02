@@ -27,9 +27,6 @@ export const getUser: GetUser = ({ userId }, attributes = []) => {
 /**
  * @description 创建用户信息
  */
-export const createUser: CreateUser = async ({ userId }) => {
-    return User.create({
-        userId,
-        status: 0,
-    });
+export const createUser: CreateUser = async (data) => {
+    return User.create(data);
 };

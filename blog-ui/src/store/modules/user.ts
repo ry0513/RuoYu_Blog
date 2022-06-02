@@ -14,7 +14,7 @@ interface Account {
     nickName?: string;
 }
 
-const account: Account = {};
+const account: Account = { accountId: 0 };
 const route: RouteRecordRaw[] = [];
 
 export const useUserStore = defineStore("user", {
@@ -44,16 +44,18 @@ export const useUserStore = defineStore("user", {
                     });
             });
         },
-        async getUserInfo(): Promise<{
-            route: RouteRecordRaw[];
-            account: Account;
-        }> {
+        async getUserInfo() {
             return new Promise((resolve, reject) => {
-                getUserInfo().then(({ data: { account, route } }) => {
-                    this.account = account;
-                    this.route = formatRoute(route);
-                    resolve({ route: formatRoute(route), account });
-                });
+                getUserInfo()
+                    .then(({ data: { account, route } }) => {
+                        this.account = account;
+                        this.route = formatRoute(route);
+                        resolve(true);
+                    })
+                    .catch(() => {
+                        this.route = formatRoute([]);
+                        resolve(false);
+                    });
             });
         },
     },

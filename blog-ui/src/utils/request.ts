@@ -28,15 +28,14 @@ instance.defaults.timeout = 5000;
 
 instance.interceptors.response.use(
     (response) => {
-        if (response.status === 200) {
-            const { data } = response;
-            if (data.code === CODE.REQUEST_SUCCESS) {
-                return data;
-            }
+        const { data } = response;
+        if (data.code === CODE.REQUEST_SUCCESS) {
+            return data;
         }
-        return response;
+
+        return Promise.reject(new Error(data.msg));
     },
-    (err) => {
+    async (err) => {
         const { config } = err;
 
         if (!config || !config.retry) return Promise.reject(err);
@@ -55,7 +54,8 @@ instance.interceptors.response.use(
             }, config.retryDelay || 1);
         });
 
-        return backoff.then(() => instance(config));
+        await backoff;
+        return await instance(config);
     }
 );
 

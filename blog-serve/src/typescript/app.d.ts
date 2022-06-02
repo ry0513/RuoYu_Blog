@@ -10,18 +10,13 @@ declare module "express-session" {
             email: string;
             phone: number;
             avatar: string;
-            status: number;
         };
 
         /**
          * @description 用户信息
          */
         blog: {
-            userId: number;
-            nickName: string;
-            avatar: string;
             status: number;
-            articlePass: { [key: string]: string };
         };
     }
 }

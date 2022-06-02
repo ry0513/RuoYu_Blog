@@ -99,6 +99,7 @@ import { TAG_STATUS_OPTIONS, getOptionsLabel } from "@/options/index";
 import { toDate } from "@/utils/date";
 import { getSettingStore } from "@/store";
 import { storeToRefs } from "pinia";
+import { addTag } from "@/api/tag";
 
 const store = getSettingStore();
 const { getWinWidth } = storeToRefs(store);
@@ -121,6 +122,9 @@ const confirm = () => {
     tagForm.value.validate().then((validate: any) => {
         if (validate === true) {
             console.log(tagData.value);
+            addTag(tagData.value).then((res) => {
+                console.log(res);
+            });
         }
     });
 };

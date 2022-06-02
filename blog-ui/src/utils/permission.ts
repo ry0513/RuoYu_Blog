@@ -25,11 +25,6 @@ router.beforeEach(async (to, from, next) => {
         getRoute.value.forEach((val) => {
             router.addRoute(val);
         });
-        router.addRoute({
-            path: "/:w+",
-            name: "404",
-            component: () => import(`@/pages/error/404.vue`),
-        });
         registerRoute = true;
         next({ ...to, replace: true });
     } else if (getPath(to.path, 1) === "/control") {

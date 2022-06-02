@@ -25,17 +25,17 @@ export default class User extends Model {
     // @Column({ type: DataType.STRING, comment: "头像地址" })
     // avatar!: string;
 
-    // @Column({ type: DataType.STRING, comment: "注册ip" })
-    // ip!: string;
+    @Column({ type: DataType.STRING, comment: "注册ip" })
+    ip!: string;
 
     // @Column({ type: DataType.STRING, comment: "注册地点" })
     // place!: string;
 
-    // @Default(50)
-    // @Column({ type: DataType.INTEGER, comment: "用户积分" })
-    // integral!: number;
+    @Default(0)
+    @Column({ type: DataType.INTEGER, comment: "用户积分" })
+    integral!: number;
 
-    @Default(10)
+    @Default(1)
     @Column({ type: DataType.INTEGER, comment: "用户状态" })
     status!: number;
 
