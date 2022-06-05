@@ -16,7 +16,7 @@ router.get("/userInfo", async (req, res) => {
             ip: getIp(req),
         });
     } else {
-        blog = { status: user.status };
+        req.session.blog = { status: user.status };
     }
 
     const route = [

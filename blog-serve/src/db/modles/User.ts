@@ -35,8 +35,8 @@ export default class User extends Model {
     @Column({ type: DataType.INTEGER, comment: "用户积分" })
     integral!: number;
 
-    @Default(1)
-    @Column({ type: DataType.INTEGER, comment: "用户状态" })
+    @Default(0)
+    @Column({ type: DataType.INTEGER, comment: "用户状态" }) // 0普通，1需审核，2无需审核，3可审核，4待定，5超级管理员
     status!: number;
 
     @HasMany(() => Article)

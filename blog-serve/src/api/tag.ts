@@ -23,19 +23,18 @@ router.post(
             return RUOYU.resParameter(res);
         }
         const { content, reason } = req.body;
-        console.log(req.session);
 
-        // const [, status] = await addTag({
-        //     content,
-        //     reason,
-        //     status: req.session.blog.status >= 4 ? 2 : 1,
-        //     userId: req.session.blog.userId,
-        // });
-        // if (status) {
-        //     RUOYU.resSuccess(res);
-        // } else {
-        //     RUOYU.resError(res, { msg: "标签已存在" });
-        // }
+        const [, status] = await addTag({
+            content,
+            reason,
+            status: req.session.blog.status > 1 ? 1 : 0,
+            userId: req.session.account.accountId,
+        });
+        if (status) {
+            RUOYU.resSuccess(res);
+        } else {
+            RUOYU.resError(res, { msg: "标签已存在" });
+        }
     }
 );
 

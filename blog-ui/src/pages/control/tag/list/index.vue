@@ -3,36 +3,18 @@
         <div class="ry-card-filter">
             <div class="ry-card-filter_options">
                 <span class="label">标签状态:</span>
-                <t-select
-                    v-model="filter.status"
-                    :options="TAG_STATUS_OPTIONS"
-                    clearable
-                    placeholder="请选择"
-                />
+                <t-select v-model="filter.status" :options="TAG_STATUS_OPTIONS" clearable placeholder="请选择" />
             </div>
             <div class="ry-card-filter_options">
                 <span class="label">标签状态:</span>
-                <t-select
-                    v-model="filter.status"
-                    :options="TAG_STATUS_OPTIONS"
-                    clearable
-                    placeholder="请选择"
-                />
+                <t-select v-model="filter.status" :options="TAG_STATUS_OPTIONS" clearable placeholder="请选择" />
             </div>
             <div class="ry-card-filter_right">
-                <t-button theme="primary" type="submit" @click="editShow = true"
-                    >新建</t-button
-                >
+                <t-button theme="primary" type="submit" @click="editShow = true">新建</t-button>
             </div>
         </div>
 
-        <t-table
-            :data="tableData"
-            :columns="TABLE_COLUMNS"
-            row-key="articleId"
-            bordered
-            :pagination="pagination"
-        >
+        <t-table :data="tableData" :columns="TABLE_COLUMNS" row-key="articleId" bordered :pagination="pagination">
             <template #count="{ row }">
                 {{ row.articles.length }}
             </template>
@@ -47,46 +29,29 @@
             </template>
 
             <template #op="slotProps">
-                <a class="t-button-link" @click="rehandleClickOp(slotProps)"
-                    >管理</a
-                >
+                <a class="t-button-link" @click="rehandleClickOp(slotProps)">管理</a>
                 <!-- <a class="t-button-link" @click="handleClickDelete(slotProps)">删除</a> -->
             </template>
         </t-table>
-        <t-dialog
-            v-model:visible="editShow"
-            :closeOnOverlayClick="false"
-            header="对话框标题"
-            :width="getWinWidth > 600 ? 600 : getWinWidth - 20"
-            @confirm="confirm"
-        >
+        <t-dialog v-model:visible="editShow" :closeOnOverlayClick="false" header="对话框标题"
+            :width="getWinWidth > 600 ? 600 : getWinWidth - 20" @confirm="confirm">
             <t-form ref="tagForm" :data="tagData">
-                <t-form-item
-                    label="标签"
-                    name="content"
-                    :rules="[
-                        {
-                            required: true,
-                            type: 'error',
-                            trigger: 'blur',
-                        },
-                        {
-                            max: 20,
-                            type: 'error',
-                            trigger: 'blur',
-                        },
-                    ]"
-                >
-                    <t-input
-                        placeholder="请输入简短的标签"
-                        v-model="tagData.content"
-                    ></t-input>
+                <t-form-item label="标签" name="content" :rules="[
+                    {
+                        required: true,
+                        type: 'error',
+                        trigger: 'blur',
+                    },
+                    {
+                        max: 20,
+                        type: 'error',
+                        trigger: 'blur',
+                    },
+                ]">
+                    <t-input placeholder="请输入简短的标签" v-model="tagData.content"></t-input>
                 </t-form-item>
                 <t-form-item label="原因" name="reason">
-                    <t-input
-                        placeholder="请简述原因（可为空）"
-                        v-model="tagData.reason"
-                    ></t-input>
+                    <t-input placeholder="请简述原因（可为空）" v-model="tagData.reason"></t-input>
                 </t-form-item>
             </t-form>
         </t-dialog>
@@ -116,7 +81,7 @@ const tagData = ref({
     reason: "",
 });
 
-const editShow = ref(true);
+const editShow = ref(false);
 const tagForm = ref();
 const confirm = () => {
     tagForm.value.validate().then((validate: any) => {
@@ -124,6 +89,7 @@ const confirm = () => {
             console.log(tagData.value);
             addTag(tagData.value).then((res) => {
                 console.log(res);
+                editShow.value = false
             });
         }
     });

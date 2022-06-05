@@ -7,6 +7,7 @@ export const addTag = ({
     content,
     userId,
     reason,
+    status,
 }: {
     content: string;
     userId: number;
@@ -15,6 +16,6 @@ export const addTag = ({
 }) => {
     return Tag.findOrCreate({
         where: { content },
-        defaults: { content, userId, reason },
+        defaults: { content, userId, reason, status },
     });
 };
