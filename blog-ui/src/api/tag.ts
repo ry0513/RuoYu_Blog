@@ -1,11 +1,25 @@
 import instance from "@/utils/request";
 
-// 获取个人信息
+// 标签相关
 
-export function addTag(data: { content: string; reason?: string }) {
+// 创建
+export function createTag(data: { content: string; reason: string }) {
     return instance({
         url: "/tag",
         method: "post",
         data,
+    });
+}
+
+// 列表（分页）
+export function getTagList(params?: {
+    status: Status;
+    content: string;
+    current: number;
+    pageSize: number;
+}) {
+    return instance({
+        url: "/tag/list",
+        params,
     });
 }

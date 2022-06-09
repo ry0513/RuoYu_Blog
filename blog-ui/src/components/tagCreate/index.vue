@@ -1,0 +1,97 @@
+<template>
+    <t-dialog
+        v-model:visible="show"
+        header="新建标签"
+        destroyOnClose
+        :confirm-btn="{
+            content: '确定',
+            theme: 'primary',
+            disabled: tagData.loading,
+        }"
+        :width="getWinWidth > 600 ? 580 : getWinWidth - 20"
+        @confirm="confirm"
+        @close="close"
+    >
+        <t-form ref="tagForm" :data="tagData" resetType="initial">
+            <t-form-item
+                label="标签"
+                name="content"
+                :rules="[
+                    { required: true, type: 'error', trigger: 'blur' },
+                    {
+                        max: 20,
+                        type: 'error',
+                        trigger: 'blur',
+                    },
+                ]"
+            >
+                <t-input
+                    placeholder="请输入简短的标签"
+                    v-model="tagData.content"
+                />
+            </t-form-item>
+            <t-form-item
+                label="原因"
+                name="reason"
+                :rules="[
+                { validator: (val: string) => val.length <= 200, message: '原因最大长度为200', trigger: 'blur', }
+            ]"
+            >
+                <t-input
+                    placeholder="请简述原因（可为空）"
+                    v-model="tagData.reason"
+                />
+            </t-form-item>
+        </t-form>
+    </t-dialog>
+</template>
+<script setup lang="ts">
+import { reactive, ref } from "vue";
+import { NotifyPlugin } from "tdesign-vue-next";
+import { createTag } from "@/api/tag";
+
+import { getSettingStore } from "@/store";
+import { storeToRefs } from "pinia";
+
+const { getWinWidth } = storeToRefs(getSettingStore());
+
+// 父子组件传值
+defineProps<{ show: boolean }>();
+const emits = defineEmits(["createTagClose"]);
+
+// 表单元素
+const tagForm = ref();
+
+// 关闭事件
+const close = () => {
+    emits("createTagClose");
+    tagForm.value.reset();
+};
+
+// 标签数据
+const tagData = reactive({
+    loading: false,
+    content: "",
+    reason: "",
+});
+
+// 提交
+const confirm = () => {
+    tagForm.value.validate().then((validate: any) => {
+        if (validate === true) {
+            tagData.loading = true;
+            createTag(tagData)
+                .then(({ data: { title, text } }) => {
+                    NotifyPlugin.success({
+                        title: title || "失败",
+                        content: text,
+                    });
+                    close();
+                })
+                .catch(() => {
+                    tagData.loading = false;
+                });
+        }
+    });
+};
+</script>

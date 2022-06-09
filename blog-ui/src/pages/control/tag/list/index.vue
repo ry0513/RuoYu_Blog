@@ -3,18 +3,42 @@
         <div class="ry-card-filter">
             <div class="ry-card-filter_options">
                 <span class="label">标签状态:</span>
-                <t-select v-model="filter.status" :options="TAG_STATUS_OPTIONS" clearable placeholder="请选择" />
+                <t-select
+                    v-model="filter.status"
+                    :options="TAG_STATUS_OPTIONS"
+                    clearable
+                    placeholder="请选择标签状态"
+                    @change="getTagListData(true)"
+                />
             </div>
             <div class="ry-card-filter_options">
-                <span class="label">标签状态:</span>
-                <t-select v-model="filter.status" :options="TAG_STATUS_OPTIONS" clearable placeholder="请选择" />
+                <span class="label">标签名称:</span>
+                <t-input
+                    v-model="filter.content"
+                    clearable
+                    placeholder="请选择标签名称"
+                    @change="getTagListData(true)"
+                />
             </div>
             <div class="ry-card-filter_right">
-                <t-button theme="primary" type="submit" @click="editShow = true">新建</t-button>
+                <t-button
+                    theme="primary"
+                    type="submit"
+                    @click="createTagShow = true"
+                    >新建</t-button
+                >
             </div>
         </div>
 
-        <t-table :data="tableData" :columns="TABLE_COLUMNS" row-key="articleId" bordered :pagination="pagination">
+        <t-table
+            :data="tableData.rows"
+            :columns="TABLE_COLUMNS"
+            row-key="articleId"
+            :loading="tableData.loading !== 0"
+            bordered
+            :pagination="tableData.pagination"
+            @page-change="onPageChange"
+        >
             <template #count="{ row }">
                 {{ row.articles.length }}
             </template>
@@ -29,72 +53,44 @@
             </template>
 
             <template #op="slotProps">
-                <a class="t-button-link" @click="rehandleClickOp(slotProps)">管理</a>
+                <a class="t-button-link" @click="rehandleClickOp(slotProps)"
+                    >管理</a
+                >
                 <!-- <a class="t-button-link" @click="handleClickDelete(slotProps)">删除</a> -->
             </template>
         </t-table>
-        <t-dialog v-model:visible="editShow" :closeOnOverlayClick="false" header="对话框标题"
-            :width="getWinWidth > 600 ? 600 : getWinWidth - 20" @confirm="confirm">
-            <t-form ref="tagForm" :data="tagData">
-                <t-form-item label="标签" name="content" :rules="[
-                    {
-                        required: true,
-                        type: 'error',
-                        trigger: 'blur',
-                    },
-                    {
-                        max: 20,
-                        type: 'error',
-                        trigger: 'blur',
-                    },
-                ]">
-                    <t-input placeholder="请输入简短的标签" v-model="tagData.content"></t-input>
-                </t-form-item>
-                <t-form-item label="原因" name="reason">
-                    <t-input placeholder="请简述原因（可为空）" v-model="tagData.reason"></t-input>
-                </t-form-item>
-            </t-form>
-        </t-dialog>
     </t-card>
+    <Create :show="createTagShow" @createTagClose="createTagShow = false" />
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { onMounted, reactive, Ref, ref } from "vue";
 import { TAG_STATUS_OPTIONS, getOptionsLabel } from "@/options/index";
 import { toDate } from "@/utils/date";
-import { getSettingStore } from "@/store";
-import { storeToRefs } from "pinia";
-import { addTag } from "@/api/tag";
+import { getTagList } from "@/api/tag";
+import pagination from "@/utils/pagination";
 
-const store = getSettingStore();
-const { getWinWidth } = storeToRefs(store);
+import debounce from "lodash/debounce";
+
+// 子组件-创建标签
+import Create from "@/components/tagCreate/index.vue";
+import { SelectValue, SelectValueChangeTrigger } from "tdesign-vue-next";
+const createTagShow = ref(false);
 
 // 筛选条件
-const filter = ref({
+const filter = reactive({
     status: "",
-    name: "",
-});
-
-// 新建/编辑数据
-const tagData = ref({
     content: "",
-    reason: "",
 });
 
-const editShow = ref(false);
-const tagForm = ref();
-const confirm = () => {
-    tagForm.value.validate().then((validate: any) => {
-        if (validate === true) {
-            console.log(tagData.value);
-            addTag(tagData.value).then((res) => {
-                console.log(res);
-                editShow.value = false
-            });
-        }
-    });
-};
+// 表格数据
+const tableData = reactive({
+    loading: 0,
+    rows: [],
+    pagination,
+});
 
+// 表格参数
 const TABLE_COLUMNS = [
     { title: "ID", width: "80", align: "center", colKey: "tagId" },
     { title: "标签", width: "150", align: "center", colKey: "content" },
@@ -136,154 +132,34 @@ const TABLE_COLUMNS = [
     },
 ];
 
-const pagination = ref({
-    defaultPageSize: 20,
-    total: 100,
-    defaultCurrent: 1,
-});
-
-const tableData = ref([
-    {
-        tagId: 5,
-        content: "ufw",
-        createdAt: "2022-04-21T00:57:55.000Z",
-        status: 0,
-        reason: "s",
-        reply: null,
-        user: {
-            nickName: "若宇",
-        },
-        articles: [],
-    },
-    {
-        tagId: 4,
-        content: "node",
-        createdAt: "2022-02-22T09:14:59.000Z",
-        status: 0,
-        reason: null,
-        reply: null,
-        user: {
-            nickName: "若宇",
-        },
-        articles: [
-            {
-                articleId: 2,
-                tagArticle: {
-                    tagId: 4,
-                    articleId: 2,
-                    createdAt: "2022-03-09T03:44:16.000Z",
-                    updatedAt: "2022-03-09T03:44:16.000Z",
-                },
-            },
-        ],
-    },
-    {
-        tagId: 3,
-        content: "redis",
-        createdAt: "2022-02-22T09:14:41.000Z",
-        status: 0,
-        reason: null,
-        reply: null,
-        user: {
-            nickName: "若宇",
-        },
-        articles: [
-            {
-                articleId: 3,
-                tagArticle: {
-                    tagId: 3,
-                    articleId: 3,
-                    createdAt: "2022-02-22T09:18:17.000Z",
-                    updatedAt: "2022-02-22T09:18:17.000Z",
-                },
-            },
-        ],
-    },
-    {
-        tagId: 2,
-        content: "nginx",
-        createdAt: "2022-02-22T09:14:36.000Z",
-        status: 0,
-        reason: null,
-        reply: null,
-        user: {
-            nickName: "若宇",
-        },
-        articles: [
-            {
-                articleId: 1,
-                tagArticle: {
-                    tagId: 2,
-                    articleId: 1,
-                    createdAt: "2022-02-22T09:17:40.000Z",
-                    updatedAt: "2022-02-22T09:17:40.000Z",
-                },
-            },
-        ],
-    },
-    {
-        tagId: 1,
-        content: "debian",
-        createdAt: "2022-02-22T09:14:31.000Z",
-        status: 0,
-        reason: null,
-        reply: null,
-        user: {
-            nickName: "若宇",
-        },
-        articles: [
-            {
-                articleId: 1,
-                tagArticle: {
-                    tagId: 1,
-                    articleId: 1,
-                    createdAt: "2022-02-22T09:17:40.000Z",
-                    updatedAt: "2022-02-22T09:17:40.000Z",
-                },
-            },
-            {
-                articleId: 2,
-                tagArticle: {
-                    tagId: 1,
-                    articleId: 2,
-                    createdAt: "2022-03-09T03:44:16.000Z",
-                    updatedAt: "2022-03-09T03:44:16.000Z",
-                },
-            },
-            {
-                articleId: 3,
-                tagArticle: {
-                    tagId: 1,
-                    articleId: 3,
-                    createdAt: "2022-02-22T09:18:17.000Z",
-                    updatedAt: "2022-02-22T09:18:17.000Z",
-                },
-            },
-            {
-                articleId: 5,
-                tagArticle: {
-                    tagId: 1,
-                    articleId: 5,
-                    createdAt: "2022-03-08T03:12:29.000Z",
-                    updatedAt: "2022-03-08T03:12:29.000Z",
-                },
-            },
-            {
-                articleId: 6,
-                tagArticle: {
-                    tagId: 1,
-                    articleId: 6,
-                    createdAt: "2022-03-09T06:00:23.000Z",
-                    updatedAt: "2022-03-09T06:00:23.000Z",
-                },
-            },
-        ],
-    },
-]);
+// 请求表格数据
+const getTagListData = debounce((first = false) => {
+    if (first) {
+        tableData.pagination.current = 1;
+    }
+    tableData.loading++;
+    const { current, pageSize } = tableData.pagination;
+    getTagList({ ...filter, current, pageSize }).then((res) => {
+        tableData.rows = res.data.rows;
+        tableData.loading--;
+        tableData.pagination.total = res.data.count;
+    });
+}, 500);
+// 表格页数变化
+const onPageChange = (pageInfo: pageChangeInfo) => {
+    tableData.pagination.current = pageInfo.current;
+    // tableData.pagination.pageSize = pageInfo.pageSize;
+    getTagListData();
+};
 
 const rehandleClickOp = ({ text, row }: { text: any; row: any }) => {
     console.log(text, row);
 };
+
+// 加载后
+onMounted(() => {
+    getTagListData();
+});
 </script>
 <style lang="scss" scoped>
 .table-container {

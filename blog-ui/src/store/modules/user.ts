@@ -5,6 +5,7 @@ import formatRoute from "@/utils/route";
 
 import { getappPackage, getUserInfo } from "@/api/user";
 import { RouteRecordRaw } from "vue-router";
+import router from "@/router";
 
 // import router from "@/router";
 interface Account {
@@ -50,6 +51,9 @@ export const useUserStore = defineStore("user", {
                     .then(({ data: { account, route } }) => {
                         this.account = account;
                         this.route = formatRoute(route);
+                        this.route.forEach((val) => {
+                            router.addRoute(val);
+                        });
                         resolve(true);
                     })
                     .catch(() => {

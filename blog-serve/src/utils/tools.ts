@@ -181,8 +181,6 @@ export const toArray = (
     return false;
 };
 
-console.log(toArray([1.2], { type: "number" }));
-
 export const toDate = (val: string, date?: string) => {
     if (val === undefined) {
         return date || false;

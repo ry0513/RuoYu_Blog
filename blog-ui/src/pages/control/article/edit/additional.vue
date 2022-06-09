@@ -36,14 +36,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 
-const article = ref({
+const article = reactive({
     type: "",
     tags: [],
     html: "",
 });
-const options = ref([
+const options = reactive([
     { label: "选项一", value: "1" },
     { label: "选项二", value: "2" },
     { label: "选项三", value: "3" },
@@ -52,7 +52,7 @@ const loading = ref(false);
 
 //*********************************************** */
 const t = () => {
-    console.log(article.value);
+    console.log(article);
 };
 const filterMethod = (search: string, option: { label: string }) => {
     return option.label.indexOf(search) !== -1;

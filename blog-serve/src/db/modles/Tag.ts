@@ -13,6 +13,7 @@ import {
 import User from "./User";
 // import TagArticle from "./TagArticle";
 import Article from "./Article";
+import TagArticle from "./TagArticle";
 
 @Table({
     tableName: "tag",
@@ -44,6 +45,6 @@ export default class Tag extends Model {
     @BelongsTo(() => User)
     user!: User;
 
-    // @BelongsToMany(() => Article, () => TagArticle)
-    // articles!: Array<Article>;
+    @BelongsToMany(() => Article, () => TagArticle)
+    articles!: Array<Article>;
 }

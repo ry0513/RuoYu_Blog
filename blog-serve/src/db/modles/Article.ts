@@ -14,6 +14,7 @@ import User from "./User";
 // import TagArticle from "./TagArticle";
 import Tag from "./Tag";
 import Sort from "./Sort";
+import TagArticle from "./TagArticle";
 
 @Table({
     tableName: "article",
@@ -80,6 +81,6 @@ export default class Article extends Model {
     @Column({ type: DataType.STRING, comment: "密码" })
     password!: string;
 
-    // @BelongsToMany(() => Tag, () => TagArticle)
-    // tags!: Array<Tag>;
+    @BelongsToMany(() => Tag, () => TagArticle)
+    tags!: Array<Tag>;
 }

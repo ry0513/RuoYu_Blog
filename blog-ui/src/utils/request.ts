@@ -1,36 +1,58 @@
 import axios from "axios";
 import qs from "qs";
-import proxy from "../config/proxy";
+import { DialogPlugin, NotifyPlugin } from "tdesign-vue-next";
+
+import { ACCTOUNT_URL } from "@/config/global";
+
+import proxy from "@/config/proxy";
 
 const env = import.meta.env.MODE || "development";
 
 const host = env === "mock" ? "/" : proxy[env].host; // 如果是mock模式 就不配置host 会走本地Mock拦截
-// console.log(host);
-
-const CODE = {
-    LOGIN_TIMEOUT: 1000,
-    REQUEST_SUCCESS: 0,
-    REQUEST_FOBID: 1001,
-};
 
 const instance = axios.create({
     baseURL: host,
-    timeout: 1000,
+    timeout: 5000,
     withCredentials: true,
 });
 
-instance.interceptors.request.use((config) => {
+instance.interceptors.request.use(async (config) => {
     config.data = config.data && qs.stringify(config.data);
+
+    await (() => {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(true);
+            }, 1000);
+        });
+    })();
     return config;
 });
-
-instance.defaults.timeout = 5000;
 
 instance.interceptors.response.use(
     (response) => {
         const { data } = response;
-        if (data.code === CODE.REQUEST_SUCCESS) {
+        if (data.code === 0) {
             return data;
+        } else if (data.code === -2 && data.data.hint !== false) {
+            const confirmDia = DialogPlugin.confirm({
+                header: "提示",
+                body: data.msg,
+                confirmBtn: "重新登录",
+                onConfirm: async () => {
+                    window.location.href = `${ACCTOUNT_URL}?path=${encodeURIComponent(
+                        window.location.href
+                    )}`;
+                },
+                onClose: () => {
+                    confirmDia.hide && confirmDia.hide();
+                },
+            });
+        } else if ([-4].includes(data.code)) {
+            NotifyPlugin.error({
+                title: data.data.title || "失败",
+                content: data.data.text || data.msg,
+            });
         }
 
         return Promise.reject(new Error(data.msg));

@@ -3,20 +3,30 @@ import RUOYU from "../config/ruoyu";
 import { createUser, getUser } from "../db/api/user";
 import { body, validationResult } from "express-validator";
 import { getIp } from "../utils/tools";
+import { login, PERMISSION } from "../config/permission";
 
 const router = Router();
 
-router.get("/userInfo", async (req, res) => {
+router.get("/userInfo", login({ hint: false }), async (req, res) => {
     let { account, blog } = req.session;
-    const user = await getUser({ userId: account.accountId }, ["status"]);
+    const user = await getUser({ userId: account.accountId }, [
+        "status",
+        "permission",
+    ]);
 
     if (!user) {
         await createUser({
             userId: account.accountId,
             ip: getIp(req),
+            nickName: account.nickName,
+            avatar: account.avatar,
+            permission: PERMISSION.lv1,
         });
     } else {
-        req.session.blog = { status: user.status };
+        req.session.blog = {
+            status: user.status,
+            permission: user.permission,
+        };
     }
 
     const route = [
@@ -95,7 +105,10 @@ router.get("/userInfo", async (req, res) => {
         },
     ];
 
-    RUOYU.resSuccess(res, { account: { ...account, ...blog }, route: route });
+    RUOYU.resSuccess(res, {
+        account: { ...account, ...blog },
+        route: route,
+    });
 });
 
 // // 注册

@@ -1,9 +1,3 @@
-/**
- * @description 参数必填+选填
- */
-type DBParameter<P, K1, K2> = Pick<P, K1> & Pick<Partial<P>, K2>;
+type PickArr<T, K extends keyof T> = { [P in K]: T[P][] };
 
-/**
- * @description 参数选填
- */
-type DBParameterPartial<P, K> = Pick<Partial<P>, K>;
+type RequestGet = { [key: string]: any };

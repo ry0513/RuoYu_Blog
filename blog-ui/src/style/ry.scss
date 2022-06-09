@@ -1,3 +1,6 @@
+body {
+    width: 100% !important;
+}
 .ry-card {
     padding-top: 8px;
     padding-bottom: 8px;
@@ -18,7 +21,8 @@
             display: inline-block;
             width: 5em;
         }
-        .t-select__wrap {
+        .t-select__wrap,
+        .t-input__wrap {
             display: inline-block;
             width: calc(100% - 5em - 20px);
         }

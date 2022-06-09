@@ -4,14 +4,13 @@ import "nprogress/nprogress.css"; // progress bar style
 import { ACCTOUNT_URL } from "@/config/global"; // progress bar style
 import { getPath } from "@/utils/route";
 
-import { getUserStore } from "@/store";
 import router from "@/router";
 import { storeToRefs } from "pinia";
+import { getUserStore } from "@/store";
 
 // const permissionStore = getPermissionStore();
 const userStore = getUserStore();
-// console.log(userStore);
-const { getRoute, getAccount } = storeToRefs(userStore);
+const { getAccount } = storeToRefs(userStore);
 
 NProgress.configure({ showSpinner: false });
 
@@ -22,15 +21,12 @@ let registerRoute = false;
 router.beforeEach(async (to, from, next) => {
     if (!registerRoute) {
         await userStore.getUserInfo();
-        getRoute.value.forEach((val) => {
-            router.addRoute(val);
-        });
         registerRoute = true;
         next({ ...to, replace: true });
     } else if (getPath(to.path, 1) === "/control") {
         // console.log(window.location.href);
         const path = encodeURIComponent(
-            `http://127.0.0.1:3000/#${to.fullPath}`
+            `${window.location.origin}/#${to.fullPath}`
         );
 
         if (getAccount.value.accountId === 0) {

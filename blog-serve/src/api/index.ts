@@ -2,17 +2,9 @@ import { Router } from "express";
 import fs from "fs-extra";
 import RUOYU from "../config/ruoyu";
 const router = Router();
-router.use(({ method, originalUrl, session: { account } }, res, next) => {
-    if (["POST"].includes(method) || originalUrl.includes("/user/")) {
-        if (account) {
-            next();
-        } else {
-            if (originalUrl === "/api/user/userInfo") {
-                RUOYU.resSuccess(res, { account: { accountId: 0 }, route: [] });
-                return;
-            }
-            RUOYU.resNeedLogin(res, { msg: "需要登录" });
-        }
+router.use(({ method, session: { account } }, res, next) => {
+    if (["POST"].includes(method) && !account) {
+        RUOYU.resNeedLogin(res, { msg: "需要登录" });
     } else {
         next();
     }
@@ -35,6 +27,3 @@ for (const key of routeList) {
 }
 
 export default router;
-
-const a = "ss";
-const aa = [1, 2, 3];

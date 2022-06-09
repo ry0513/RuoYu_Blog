@@ -33,3 +33,8 @@ export const ENCRYPT = {
         IV: "LtEdEEmXzikGY0aL",
     },
 };
+
+// export const PERMISSION = [
+//     // 标签
+//     "tag:add",
+// ];

@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 
 import { storeToRefs } from "pinia";
 import { getSettingStore } from "@/store";
@@ -43,7 +43,7 @@ const { getWinWidth } = storeToRefs(store);
 
 const additionalShow = ref(true);
 // 定义 文章
-const article = ref({
+const article = reactive({
     title: "",
     html: "",
 });
@@ -52,19 +52,19 @@ const maxlength = 50;
 
 // 事件 编辑器改变
 const onChange = (html: string) => {
-    article.value.html = html;
+    article.html = html;
 };
 
 // 计算属性 标题长度
 const suffix = computed(() => {
-    return article.value.title.length > 4
-        ? `${article.value.title.length}/${maxlength}`
-        : `还需要输入${5 - article.value.title.length}个字`;
+    return article.title.length > 4
+        ? `${article.title.length}/${maxlength}`
+        : `还需要输入${5 - article.title.length}个字`;
 });
 
 // 事件 草稿点击
 const test = () => {
-    console.log(article.value);
+    console.log(article);
 };
 </script>
 <style lang="scss" scoped>

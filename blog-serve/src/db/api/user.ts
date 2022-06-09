@@ -1,16 +1,26 @@
 import { getCity, getIp } from "../../utils/tools";
 import { Request } from "express";
 import User from "../modles/User";
-import { CreateUser, GetUser } from "../../typescript/db/user";
-
 /**
  * @description 获取用户信息
  */
-export const getUser: GetUser = ({ userId }, attributes = []) => {
+export const getUser = (
+    { userId }: Pick<User, "userId">,
+    attributes: Array<"status" | "permission"> = []
+) => {
     return User.findOne({
         attributes: ["userId", ...attributes],
         where: { userId },
     });
+};
+
+/**
+ * @description 创建用户信息
+ */
+export const createUser = async (
+    data: Pick<User, "userId" | "nickName" | "avatar" | "ip" | "permission">
+) => {
+    return User.create(data);
 };
 
 /**
@@ -23,10 +33,3 @@ export const getUser: GetUser = ({ userId }, attributes = []) => {
 //     //     where: { userId },
 //     // });
 // };
-
-/**
- * @description 创建用户信息
- */
-export const createUser: CreateUser = async (data) => {
-    return User.create(data);
-};

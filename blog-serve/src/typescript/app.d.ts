@@ -17,6 +17,7 @@ declare module "express-session" {
          */
         blog: {
             status: number;
+            permission: string[] | "*";
         };
     }
 }
