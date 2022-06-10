@@ -6,15 +6,12 @@ import { Op } from "sequelize";
 /**
  * @description 新增标签
  */
-export const createTag = ({
-    content,
-    userId,
-    reason,
-    status,
-}: Pick<Tag, "content" | "userId" | "reason" | "status">) => {
+export const createTag = (
+    data: Pick<Tag, "content" | "userId" | "reason" | "status" | "remark">
+) => {
     return Tag.findOrCreate({
-        where: { content },
-        defaults: { content, userId, reason, status },
+        where: { content: data.content },
+        defaults: data,
     });
 };
 
@@ -45,13 +42,21 @@ export const getTagList = ({
             {
                 attributes: ["nickName"],
                 model: User,
-                // where: { userId: 1 },
             },
             {
                 attributes: ["articleId"],
                 model: Article,
-                // where: { articleId: 1 },
             },
         ],
+    });
+};
+
+/**
+ * @description 获取标签列表（全部）
+ */
+export const getTagListAll = () => {
+    return Tag.findAll({
+        attributes: ["tagId", "content", "status"],
+        where: { status: { [Op.or]: [0, 1] } },
     });
 };

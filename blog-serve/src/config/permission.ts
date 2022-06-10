@@ -19,27 +19,50 @@ export const login = (data = {}) => {
 // 权限中间件
 export const permission = (val: string[] | string) => {
     return (
-        {
-            session: {
-                blog: { permission },
-            },
-        }: Request,
+        { session: { blog } }: Request,
         res: Response,
         next: NextFunction
     ) => {
-        if (
-            permission === "*" ||
-            (typeof val === "string" && permission.includes(val)) ||
-            (typeof val === "object" &&
-                val.filter((item) => {
-                    return permission.includes(item);
-                }).length > 0)
-        ) {
-            next();
+        if (blog) {
+            const { permission } = blog;
+            if (
+                permission === "*" ||
+                (typeof val === "string" && permission.includes(val)) ||
+                (typeof val === "object" &&
+                    val.filter((item) => {
+                        return permission.includes(item);
+                    }).length > 0)
+            ) {
+                next();
+            } else {
+                RUOYU.resPermission(res);
+            }
         } else {
-            RUOYU.resPermission(res);
+            RUOYU.resError(res, {
+                title: "获取权限失败",
+                text: "请刷新当前页面",
+            });
         }
     };
+};
+
+// 验证权限
+export const permissionVerify = (
+    {
+        session: {
+            blog: { permission },
+        },
+    }: Request,
+    val: string[] | string
+) => {
+    return (
+        permission === "*" ||
+        (typeof val === "string" && permission.includes(val)) ||
+        (typeof val === "object" &&
+            val.filter((item) => {
+                return permission.includes(item);
+            }).length > 0)
+    );
 };
 
 export const PERMISSION = {
@@ -47,5 +70,6 @@ export const PERMISSION = {
 };
 const list = [
     // 标签相关
-    "tag:add",
+    "tag:add:v1",
+    "tag:add:v2",
 ];

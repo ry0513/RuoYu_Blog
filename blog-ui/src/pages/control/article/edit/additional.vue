@@ -6,82 +6,83 @@
         <!-- <t-form-item label="手机号码" name="tel" initialData="123456">
             <t-input placeholder="请输入内容" />
         </t-form-item> -->
-        <t-form-item
-            label="卡片样式"
-            name="course"
-            initialData="['1']"
-            class="column"
-        >
+        <t-form-item label="卡片样式" name="type" class="column">
             <t-select v-model="article.type" placeholder="请选择卡片样式">
-                <t-option value="1" label="单图"></t-option>
-                <t-option value="2" label="两图"></t-option>
-                <t-option value="3" label="三图"></t-option>
+                <t-option value="0" label="无图"></t-option>
+                <t-option value="1" label="单图" disabled></t-option>
+                <t-option value="2" label="两图" disabled></t-option>
+                <t-option value="3" label="三图" disabled></t-option>
             </t-select>
-            <div>444</div>
         </t-form-item>
-        <t-form-item label="标签" name="course" initialData="['1']">
+        <t-form-item label="标签" name="tags">
             <t-select
                 v-model="article.tags"
                 multiple
                 filterable
                 :max="3"
-                placeholder="请选择标签"
-                :options="options"
-                @focus="handleFocus"
-                :loading="loading"
-            />
+                placeholder="请输入关键字"
+            >
+                <t-option
+                    v-for="item in tagOptions"
+                    :key="item.tagId"
+                    :value="item.tagId"
+                    :label="item.content"
+                >
+                    <div>
+                        {{ item.content
+                        }}{{ item.status === 0 ? "（审核中）" : "" }}
+                    </div>
+                </t-option>
+            </t-select>
+        </t-form-item>
+        <t-form-item label="分类" name="sort">
+            <t-select v-model="article.sort" :max="3" placeholder="请选择标签">
+                <t-option
+                    v-for="item in sortOptions"
+                    :key="item.sortId"
+                    :value="item.sortId"
+                    :label="item.content"
+                />
+            </t-select>
         </t-form-item>
     </t-form>
     <div @click="t">console</div>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from "vue";
+import { getSortListAll } from "@/api/sort";
+import { getTagListAll } from "@/api/tag";
+import { reactive } from "vue";
 
+// 文章属性
 const article = reactive({
     type: "",
     tags: [],
     html: "",
+    sort: "",
 });
-const options = reactive([
-    { label: "选项一", value: "1" },
-    { label: "选项二", value: "2" },
-    { label: "选项三", value: "3" },
-]);
-const loading = ref(false);
+
+// 标签选项
+let tagOptions: { tagId: number; content: string; status: number }[] = reactive(
+    []
+);
+
+// 分类选项
+let sortOptions: { sortId: number; content: string }[] = reactive([]);
+
+// 获取标签数据
+getTagListAll().then(({ data }) => {
+    tagOptions.push(...data);
+});
+
+// 获取分类数据
+getSortListAll().then(({ data }) => {
+    sortOptions.push(...data);
+});
 
 //*********************************************** */
 const t = () => {
     console.log(article);
-};
-const filterMethod = (search: string, option: { label: string }) => {
-    return option.label.indexOf(search) !== -1;
-};
-const handleFocus = ({ value, e }: any) => {
-    console.log("handleFocus: ", value, e);
-};
-const remoteMethod = (search: string) => {
-    console.log("search", search);
-    // if (search) {
-    //     loading.value = true;
-    //     setTimeout(() => {
-    //         loading.value = false;
-    //         options.value = [
-    //             {
-    //                 value: `${search}_test1`,
-    //                 label: `${search}_test1`,
-    //             },
-    //             {
-    //                 value: `${search}_test2`,
-    //                 label: `${search}_test2`,
-    //             },
-    //             {
-    //                 value: `${search}_test3`,
-    //                 label: `${search}_test3`,
-    //             },
-    //         ];
-    //     }, 500);
-    // }
 };
 </script>
 

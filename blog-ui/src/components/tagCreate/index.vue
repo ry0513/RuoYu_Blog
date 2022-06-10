@@ -6,7 +6,7 @@
         :confirm-btn="{
             content: '确定',
             theme: 'primary',
-            disabled: tagData.loading,
+            disabled: loading,
         }"
         :width="getWinWidth > 600 ? 580 : getWinWidth - 20"
         @confirm="confirm"
@@ -57,7 +57,7 @@ const { getWinWidth } = storeToRefs(getSettingStore());
 
 // 父子组件传值
 defineProps<{ show: boolean }>();
-const emits = defineEmits(["createTagClose"]);
+const emits = defineEmits(["createTagClose", "createTagSuccess"]);
 
 // 表单元素
 const tagForm = ref();
@@ -66,30 +66,34 @@ const tagForm = ref();
 const close = () => {
     emits("createTagClose");
     tagForm.value.reset();
+    loading.value = false;
 };
 
 // 标签数据
 const tagData = reactive({
-    loading: false,
     content: "",
     reason: "",
 });
+
+const loading = ref(false);
 
 // 提交
 const confirm = () => {
     tagForm.value.validate().then((validate: any) => {
         if (validate === true) {
-            tagData.loading = true;
+            loading.value = true;
             createTag(tagData)
                 .then(({ data: { title, text } }) => {
                     NotifyPlugin.success({
-                        title: title || "失败",
+                        title: title,
                         content: text,
+                        closeBtn: true,
                     });
+                    emits("createTagSuccess");
                     close();
                 })
                 .catch(() => {
-                    tagData.loading = false;
+                    loading.value = false;
                 });
         }
     });

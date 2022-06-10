@@ -1,6 +1,6 @@
 import instance from "@/utils/request";
 
-// 标签相关
+// 分类相关
 
 // 创建
 export function createTag(data: { content: string; reason: string }) {
@@ -25,8 +25,8 @@ export function getTagList(params?: {
 }
 
 // 列表（全部，简略属性）
-export function getTagListAll() {
+export function getSortListAll() {
     return instance({
-        url: "/tag/list/all",
+        url: "/sort/list/all",
     });
 }

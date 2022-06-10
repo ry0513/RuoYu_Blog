@@ -48,10 +48,11 @@ instance.interceptors.response.use(
                     confirmDia.hide && confirmDia.hide();
                 },
             });
-        } else if ([-4].includes(data.code)) {
+        } else if ([-3, -4].includes(data.code)) {
             NotifyPlugin.error({
-                title: data.data.title || "失败",
+                title: data.data.title || "操作失败",
                 content: data.data.text || data.msg,
+                closeBtn: true,
             });
         }
 

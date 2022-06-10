@@ -7,8 +7,8 @@ export const ARTICLE_STATUS_OPTIONS = [
 
 export const TAG_STATUS_OPTIONS = [
     { value: 0, label: "待审核" },
-    { value: 1, label: "驳回" },
-    { value: 2, label: "正常" },
+    { value: 1, label: "正常" },
+    { value: 2, label: "驳回" },
 ];
 
 export const getOptionsLabel = (

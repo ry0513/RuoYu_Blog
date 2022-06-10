@@ -101,6 +101,27 @@ router.get("/userInfo", login({ hint: false }), async (req, res) => {
                         },
                     ],
                 },
+                {
+                    path: "sort",
+                    name: "controlSort",
+                    component: "layouts/blank",
+                    redirect: "/control/sort/list",
+                    meta: {
+                        title: "分类管理",
+                        icon: "",
+                    },
+                    children: [
+                        {
+                            path: "list",
+                            name: "controlSortList",
+                            component: "pages/control/sort/list/index",
+                            meta: {
+                                title: "sort列表",
+                                icon: "",
+                            },
+                        },
+                    ],
+                },
             ],
         },
     ];
