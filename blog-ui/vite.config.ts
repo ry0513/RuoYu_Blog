@@ -12,8 +12,8 @@ export default ({ mode }: ConfigEnv): UserConfig => {
         // 构建特定配置
         resolve: {
             alias: {
-                "@": resolve(__dirname, "./src")
-            }
+                "@": resolve(__dirname, "./src"),
+            },
         },
         plugins: [
             createVuePlugin(),
@@ -22,24 +22,24 @@ export default ({ mode }: ConfigEnv): UserConfig => {
             AutoImport({
                 resolvers: [
                     TDesignResolver({
-                        library: "vue-next"
-                    })
-                ]
+                        library: "vue-next",
+                    }),
+                ],
             }),
             Components({
                 resolvers: [
                     TDesignResolver({
-                        library: "vue-next"
-                    })
-                ]
-            })
+                        library: "vue-next",
+                    }),
+                ],
+            }),
         ],
         server: {
             port: 3000,
             host: "0.0.0.0",
             proxy: {
-                "/api": "http://127.0.0.1:3005/"
-            }
-        }
+                "/api": "http://127.0.0.1:3005/",
+            },
+        },
     };
 };

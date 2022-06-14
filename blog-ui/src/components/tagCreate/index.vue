@@ -1,8 +1,8 @@
 <template>
     <t-dialog
         v-model:visible="show"
+        :closeOnOverlayClick="false"
         header="新建标签"
-        destroyOnClose
         :confirm-btn="{
             content: '确定',
             theme: 'primary',

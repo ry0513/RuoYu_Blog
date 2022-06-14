@@ -19,27 +19,18 @@
         <Editor :valueHtml="article.html" @onChange="onChange" />
     </t-card>
 
-    <t-dialog
-        v-model:visible="additionalShow"
-        :closeOnOverlayClick="false"
-        :footer="false"
-        header="对话框标题"
-        :width="getWinWidth > 800 ? 800 : getWinWidth - 20"
-    >
-        <Additional />
-    </t-dialog>
+    <Additional
+        :show="additionalShow"
+        :articleData="article"
+        @additionalClose="additionalShow = false"
+    />
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 
-import { storeToRefs } from "pinia";
-import { getSettingStore } from "@/store";
 import Editor from "@/components/editor/index.vue";
 import Additional from "./additional.vue";
-
-const store = getSettingStore();
-const { getWinWidth } = storeToRefs(store);
 
 const additionalShow = ref(true);
 // 定义 文章

@@ -1,4 +1,4 @@
-import { Router, Request } from "express";
+import { Router } from "express";
 import RUOYU from "../config/ruoyu";
 import { getSortListAll } from "../db/api/sort";
 
