@@ -1,6 +1,6 @@
 import { Router, Request } from "express";
 import RUOYU from "../config/ruoyu";
-import { body, query, validationResult } from "express-validator";
+import { body, check, query, validationResult } from "express-validator";
 import { createTag, getTagList, getTagListAll } from "../db/api/tag";
 import { permission, permissionVerify } from "../config/permission";
 import { currentPage, toArr, toLike } from "../config/validator";

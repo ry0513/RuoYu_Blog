@@ -11,7 +11,13 @@
             v-model="valueHtml"
             :defaultConfig="editorConfig"
             @onCreated="onCreated"
-            @onChange="(editor) => $emit('onChange', editor.getHtml())"
+            @onChange="
+                (editor) =>
+                    $emit('onChange', {
+                        html: editor.getHtml(),
+                        content: JSON.stringify(editor.children),
+                    })
+            "
         />
     </div>
 </template>

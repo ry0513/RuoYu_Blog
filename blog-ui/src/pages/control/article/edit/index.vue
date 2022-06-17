@@ -8,10 +8,7 @@
                 :maxlength="maxlength"
                 :suffix="suffix"
             />
-            <t-button
-                theme="primary"
-                variant="outline"
-                @click="additionalShow = true"
+            <t-button theme="primary" variant="outline" @click="test"
                 >草稿</t-button
             >
             <t-button theme="primary">提交</t-button>
@@ -32,18 +29,20 @@ import { computed, reactive, ref } from "vue";
 import Editor from "@/components/editor/index.vue";
 import Additional from "./additional.vue";
 
-const additionalShow = ref(true);
+const additionalShow = ref(false);
 // 定义 文章
 const article = reactive({
     title: "",
     html: "",
+    content: "",
 });
 // 定义 标题最大长度
 const maxlength = 50;
 
 // 事件 编辑器改变
-const onChange = (html: string) => {
+const onChange = ({ html, content }: { html: string; content: string }) => {
     article.html = html;
+    article.content = content;
 };
 
 // 计算属性 标题长度
@@ -55,6 +54,7 @@ const suffix = computed(() => {
 
 // 事件 草稿点击
 const test = () => {
+    additionalShow.value = true;
     console.log(article);
 };
 </script>

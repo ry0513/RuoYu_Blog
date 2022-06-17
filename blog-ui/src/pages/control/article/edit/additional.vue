@@ -15,7 +15,7 @@
             <t-form-item
                 label="样式"
                 class="column"
-                :rules="[{ required: true, type: 'error', trigger: 'blur' }]"
+                :rules="[{ required: true, type: 'error' }]"
                 name="type"
             >
                 <t-select v-model="article.type" placeholder="请选择样式">
@@ -28,7 +28,7 @@
             <t-form-item
                 label="标签"
                 name="tags"
-                :rules="[{ required: true, type: 'error', trigger: 'blur' }]"
+                :rules="[{ required: true, type: 'error' }]"
             >
                 <t-select
                     v-model="article.tags"
@@ -42,11 +42,11 @@
             </t-form-item>
             <t-form-item
                 label="分类"
-                name="sort"
-                :rules="[{ required: true, type: 'error', trigger: 'blur' }]"
+                name="sortId"
+                :rules="[{ required: true, type: 'error' }]"
             >
                 <t-select
-                    v-model="article.sort"
+                    v-model="article.sortId"
                     :max="3"
                     :options="sortOptions"
                     :keys="{ value: 'sortId', label: 'content' }"
@@ -60,7 +60,6 @@
                     {
                         pattern: /^[A-Za-z0-9]{0,10}$/,
                         message: '只允许大小写字母与数字且最大10位',
-                        trigger: 'change',
                     },
                 ]"
             >
@@ -80,13 +79,13 @@ import { reactive, ref } from "vue";
 
 import { storeToRefs } from "pinia";
 import { getSettingStore } from "@/store";
-import { log } from "console";
+import { createArticle } from "@/api/article";
 const store = getSettingStore();
 const { getWinWidth } = storeToRefs(store);
 
 const props = defineProps<{
     show: boolean;
-    articleData: { title: string; html: string };
+    articleData: { title: string; html: string; content: string };
 }>();
 const emits = defineEmits(["additionalClose", "createTagSuccess"]);
 // 文章属性
@@ -94,7 +93,7 @@ const article = reactive({
     type: "",
     tags: [],
     html: "",
-    sort: "",
+    sortId: "",
     passwd: "",
 });
 
@@ -148,7 +147,11 @@ const confirm = () => {
     articleForm.value.validate().then((validate: any) => {
         if (validate === true) {
             console.log({ ...article, ...props.articleData });
-
+            createArticle({ status: 1, ...article, ...props.articleData }).then(
+                (res) => {
+                    console.log(res);
+                }
+            );
             // loading.value = true;
             // createTag(tagData)
             //     .then(({ data: { title, text } }) => {

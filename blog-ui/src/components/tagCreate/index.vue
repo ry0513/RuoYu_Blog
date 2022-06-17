@@ -17,11 +17,10 @@
                 label="标签"
                 name="content"
                 :rules="[
-                    { required: true, type: 'error', trigger: 'blur' },
+                    { required: true, type: 'error' },
                     {
                         max: 20,
                         type: 'error',
-                        trigger: 'blur',
                     },
                 ]"
             >
@@ -34,7 +33,7 @@
                 label="原因"
                 name="reason"
                 :rules="[
-                { validator: (val: string) => val.length <= 200, message: '原因最大长度为200', trigger: 'blur', }
+                { validator: (val: string) => val.length <= 200, message: '原因最大长度为200',  }
             ]"
             >
                 <t-input
