@@ -9,10 +9,7 @@ const router = Router();
 
 router.get("/userInfo", login({ hint: false }), async (req, res) => {
     let { account, blog } = req.session;
-    const user = await getUser({ userId: account.accountId }, [
-        "status",
-        "permission",
-    ]);
+    const user = await getUser({ userId: account.accountId }, ["status", "permission"]);
 
     if (!user) {
         await createUser({
@@ -23,6 +20,7 @@ router.get("/userInfo", login({ hint: false }), async (req, res) => {
             permission: PERMISSION.lv1,
         });
     } else {
+        console.log(user.permission);
         req.session.blog = {
             status: user.status,
             permission: user.permission,

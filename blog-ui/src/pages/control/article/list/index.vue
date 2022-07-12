@@ -1,33 +1,25 @@
 <template>
     <t-card :bordered="false" class="ry-card">
-        <t-form
-            ref="form"
-            :data="formData"
-            :label-width="80"
-            layout="inline"
-            colon
-        >
-            <t-form-item label="文章状态" name="status">
-                <t-select
-                    v-model="formData.status"
-                    class="form-item-content"
-                    :options="ARTICLE_STATUS_OPTIONS"
-                    clearable
-                    placeholder="请选择"
-                />
-            </t-form-item>
-            <!-- <t-form-item label="合同名称" name="name">
-                <t-input v-model="formData.name" class="form-item-content" type="search" placeholder="标题" clearable />
-            </t-form-item> -->
-        </t-form>
+        <div class="ry-card-filter">
+            <div class="ry-card-filter_options">
+                <span class="label">文章状态:</span>
+                <t-select v-model="filter.status" :options="ARTICLE_STATUS_OPTIONS" clearable placeholder="请选择文章状态" @change="getArticleListData(true)" />
+            </div>
+            <div class="ry-card-filter_options">
+                <span class="label">文章分类:</span>
+                <t-select v-model="filter.sortId" :options="sortOptions" clearable placeholder="请选择文章分类" :keys="{ value: 'sortId', label: 'content' }" @change="getArticleListData(true)" />
+            </div>
+            <div class="ry-card-filter_options">
+                <span class="label">文章名称:</span>
+                <t-input v-model="filter.content" clearable placeholder="请输入文章名称" @change="getArticleListData(true)" />
+            </div>
+            <div class="ry-card-filter_right">
+                <t-button theme="primary" type="submit">新增</t-button>
+            </div>
+        </div>
+
         <div class="table-container">
-            <t-table
-                :data="tableData"
-                :columns="TABLE_COLUMNS"
-                row-key="articleId"
-                bordered
-                :pagination="pagination"
-            >
+            <t-table :data="tableData.rows" :columns="TABLE_COLUMNS" row-key="articleId" bordered :loading="tableData.loading !== 0" :pagination="tableData.pagination" @page-change="onPageChange">
                 <template #sort="{ row }">
                     {{ row.sort?.content || "未分类" }}
                 </template>
@@ -35,23 +27,19 @@
                     {{ getOptionsLabel(ARTICLE_STATUS_OPTIONS, row.status) }}
                 </template>
                 <template #tags="{ row }">
-                    <t-tag
-                        theme="primary"
-                        class="tags"
-                        variant="light"
-                        v-for="(item, index) in row.tags"
-                        :key="index"
-                    >
+                    <t-tag theme="primary" class="tags" variant="light" v-for="(item, index) in row.tags" :key="index">
                         {{ item.content }}
                     </t-tag>
                 </template>
                 <template #password="{ row }">
                     {{ row.password || "无需密码" }}
                 </template>
+                <template #releaseAt="{ row }">
+                    {{ row.releaseAt || "未发布过" }}
+                </template>
                 <template #op="slotProps">
-                    <a class="t-button-link" @click="rehandleClickOp(slotProps)"
-                        >管理</a
-                    >
+                    <t-button variant="text" theme="success" @click="go(`/control/article/edit`)"> 编辑 </t-button>
+
                     <!-- <a class="t-button-link" @click="handleClickDelete(slotProps)">删除</a> -->
                 </template>
             </t-table>
@@ -67,14 +55,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import { ARTICLE_STATUS_OPTIONS, getOptionsLabel } from "@/options/index";
+import { getSortListAll } from "@/api/sort";
+import debounce from "lodash/debounce";
+import pagination from "@/utils/pagination";
+import { getArticleList } from "@/api/article";
+import router from "@/router";
 
-const formData = ref({
+// 筛选条件
+const filter = reactive({
     status: "",
-    name: "",
+    content: "",
+    sortId: null,
 });
 
+// 表格参数
 const TABLE_COLUMNS = [
     { title: "ID", width: "100", align: "center", colKey: "articleId" },
     { title: "分类", width: "100", colKey: "sort" },
@@ -87,189 +83,53 @@ const TABLE_COLUMNS = [
         colKey: "password",
         cell: { col: "password" },
     },
-    { title: "发布时间", width: "200", colKey: "releaseAt" },
+    { title: "发布时间", width: "200", colKey: "releaseAt", cell: { col: "releaseAt" } },
     { align: "left", width: "200", colKey: "op", title: "操作" },
 ];
 
-const pagination = ref({
-    defaultPageSize: 20,
-    total: 100,
-    defaultCurrent: 1,
+// 表格数据
+const tableData = reactive({
+    loading: 0,
+    rows: [],
+    pagination,
+});
+// 表格页数变化
+const onPageChange = (pageInfo: pageChangeInfo) => {
+    tableData.pagination.current = pageInfo.current;
+    getArticleListData();
+};
+// 请求表格数据
+const getArticleListData = debounce((first = false) => {
+    if (first) {
+        tableData.pagination.current = 1;
+    }
+    tableData.loading++;
+    const { current, pageSize } = tableData.pagination;
+    getArticleList({ ...filter, current, pageSize }).then(({ data }) => {
+        console.log(data);
+        tableData.rows = data.rows;
+        tableData.loading--;
+        tableData.pagination.total = data.count;
+    });
+}, 500);
+
+// 分类选项
+let sortOptions: { sortId: number; content: string }[] = reactive([]);
+
+// 请求分类数据
+getSortListAll().then(({ data }) => {
+    sortOptions.push(...data);
 });
 
-const tableData = ref([
-    {
-        articleId: 6,
-        title: "mysql",
-        status: 2,
-        releaseAt: "2022-03-09T03:51:08.000Z",
-        createdAt: "2022-03-09T03:51:08.000Z",
-        password: "",
-        tags: [
-            {
-                tagId: 1,
-                content: "debian",
-                tagArticle: {
-                    tagId: 1,
-                    articleId: 6,
-                    createdAt: "2022-03-09T06:00:23.000Z",
-                    updatedAt: "2022-03-09T06:00:23.000Z",
-                },
-            },
-        ],
-        sort: {
-            sortId: 1,
-            content: "全部",
-        },
-    },
-    {
-        articleId: 5,
-        title: "使用UFW设置防火墙",
-        status: 2,
-        releaseAt: "2022-03-08T02:24:18.000Z",
-        createdAt: "2022-03-08T02:24:18.000Z",
-        password: "123",
-        tags: [
-            {
-                tagId: 1,
-                content: "debian",
-                tagArticle: {
-                    tagId: 1,
-                    articleId: 5,
-                    createdAt: "2022-03-08T03:12:29.000Z",
-                    updatedAt: "2022-03-08T03:12:29.000Z",
-                },
-            },
-        ],
-        sort: {
-            sortId: 1,
-            content: "全部",
-        },
-    },
-    {
-        articleId: 4,
-        title: "Git 常用命令",
-        status: 0,
-        releaseAt: null,
-        createdAt: "2022-02-28T00:46:23.000Z",
-        password: null,
-        tags: [],
-        sort: null,
-    },
-    {
-        articleId: 3,
-        title: "debian安装redis",
-        status: 2,
-        releaseAt: "2022-02-19T09:18:17.000Z",
-        createdAt: "2022-02-19T09:16:07.000Z",
-        password: "",
-        tags: [
-            {
-                tagId: 1,
-                content: "debian",
-                tagArticle: {
-                    tagId: 1,
-                    articleId: 3,
-                    createdAt: "2022-02-22T09:18:17.000Z",
-                    updatedAt: "2022-02-22T09:18:17.000Z",
-                },
-            },
-            {
-                tagId: 3,
-                content: "redis",
-                tagArticle: {
-                    tagId: 3,
-                    articleId: 3,
-                    createdAt: "2022-02-22T09:18:17.000Z",
-                    updatedAt: "2022-02-22T09:18:17.000Z",
-                },
-            },
-        ],
-        sort: {
-            sortId: 1,
-            content: "全部",
-        },
-    },
-    {
-        articleId: 2,
-        title: "debian安装nvm和使用",
-        status: 2,
-        releaseAt: "2022-02-18T09:17:58.000Z",
-        createdAt: "2022-02-17T09:15:55.000Z",
-        password: "",
-        tags: [
-            {
-                tagId: 1,
-                content: "debian",
-                tagArticle: {
-                    tagId: 1,
-                    articleId: 2,
-                    createdAt: "2022-03-09T03:44:16.000Z",
-                    updatedAt: "2022-03-09T03:44:16.000Z",
-                },
-            },
-            {
-                tagId: 4,
-                content: "node",
-                tagArticle: {
-                    tagId: 4,
-                    articleId: 2,
-                    createdAt: "2022-03-09T03:44:16.000Z",
-                    updatedAt: "2022-03-09T03:44:16.000Z",
-                },
-            },
-        ],
-        sort: {
-            sortId: 1,
-            content: "全部",
-        },
-    },
-    {
-        articleId: 1,
-        title: "debian安装nginx",
-        status: 2,
-        releaseAt: "2022-02-16T09:15:43.000Z",
-        createdAt: "2022-02-15T09:15:43.000Z",
-        password: "",
-        tags: [
-            {
-                tagId: 1,
-                content: "debian",
-                tagArticle: {
-                    tagId: 1,
-                    articleId: 1,
-                    createdAt: "2022-02-22T09:17:40.000Z",
-                    updatedAt: "2022-02-22T09:17:40.000Z",
-                },
-            },
-            {
-                tagId: 2,
-                content: "nginx",
-                tagArticle: {
-                    tagId: 2,
-                    articleId: 1,
-                    createdAt: "2022-02-22T09:17:40.000Z",
-                    updatedAt: "2022-02-22T09:17:40.000Z",
-                },
-            },
-        ],
-        sort: {
-            sortId: 1,
-            content: "全部",
-        },
-    },
-]);
+// 加载后
+onMounted(() => {
+    getArticleListData();
+});
 
-const onReset = (val: any) => {
-    console.log(val);
-};
-
-const onSubmit = (val: any) => {
-    console.log(val);
-};
-
-const rehandleClickOp = ({ text, row }: { text: any; row: any }) => {
-    console.log(text, row);
+// 跳转
+const go = (path: string) => {
+    console.log(path);
+    router.replace(path);
 };
 </script>
 <style lang="scss" scoped>

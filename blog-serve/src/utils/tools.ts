@@ -3,7 +3,7 @@ import { Request } from "express";
 import axios from "axios";
 import RUOYU from "../config/ruoyu";
 import UAParser from "ua-parser-js";
-import cheerio from "cheerio";
+import { load } from "cheerio";
 import Prism from "prismjs";
 import loadLanguages from "prismjs/components/";
 const Languages = [
@@ -222,10 +222,11 @@ export const formatParam = (
  */
 export const formatCode = (html: string): string => {
     // console.log("**************");
-    const $ = cheerio.load(html);
+    const $ = load(html);
 
     $("code").each((index, ele) => {
-        let code = $(ele).children("span").html();
+        let code = $(ele).html();
+        console.log(code);
         const lang = $(ele).attr("class")?.replace("language-", "") || "text";
 
         const getLine = (code: string) => {
@@ -271,5 +272,7 @@ export const formatCode = (html: string): string => {
         // $(ele).parent().addClass(`line-numbers ${$(ele).attr("class")}).addClass("language-none");
         // $(ele).parent().wrap(`<div  class=''></div>`);
     });
+    console.log("/************************** /");
+
     return $("body").html() || "";
 };

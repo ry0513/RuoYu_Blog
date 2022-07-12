@@ -3,11 +3,7 @@ import RUOYU from "./ruoyu";
 
 // 权限中间件
 export const login = (data = {}) => {
-    return (
-        { session: { account } }: Request,
-        res: Response,
-        next: NextFunction
-    ) => {
+    return ({ session: { account } }: Request, res: Response, next: NextFunction) => {
         if (account) {
             next();
         } else {
@@ -18,11 +14,7 @@ export const login = (data = {}) => {
 
 // 权限中间件
 export const permission = (val: string[] | string) => {
-    return (
-        { session: { blog } }: Request,
-        res: Response,
-        next: NextFunction
-    ) => {
+    return ({ session: { blog } }: Request, res: Response, next: NextFunction) => {
         if (blog) {
             const { permission } = blog;
             if (

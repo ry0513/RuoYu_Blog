@@ -8,17 +8,11 @@ import { STATUS_TAG } from "../config/status";
 
 const router = Router();
 
+// 获取全部(分页)
 router.get(
     "/list",
-    query("current")
-        .default(1)
-        .isInt({ min: 1, allow_leading_zeroes: false })
-        .toInt()
-        .customSanitizer(currentPage),
-    query("pageSize")
-        .default(10)
-        .isInt({ min: 1, allow_leading_zeroes: false })
-        .toInt(),
+    query("current").default(1).isInt({ min: 1, allow_leading_zeroes: false }).toInt().customSanitizer(currentPage),
+    query("pageSize").default(10).isInt({ min: 1, allow_leading_zeroes: false }).toInt(),
     query("status")
         .default(-1)
         .toInt()
@@ -26,6 +20,7 @@ router.get(
         .customSanitizer(toArr),
     query("content").default("").isString().customSanitizer(toLike),
     async (req: Request<{}, {}, {}, RequestGet>, res) => {
+        console.log(req.query);
         if (!validationResult(req).isEmpty()) {
             return RUOYU.resParameter(res);
         }

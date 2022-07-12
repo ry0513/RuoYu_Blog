@@ -2,7 +2,7 @@
     <t-layout v-if="$route.meta.full !== true">
         <Header />
         <t-layout>
-            <Aside class="control-height" style="flex:0 0 auto" />
+            <Aside class="control-height" style="flex: 0 0 auto" />
             <t-content class="control-height control-main">
                 <Breadcrumb />
                 <router-view />
@@ -12,10 +12,9 @@
     <router-view v-else />
 </template>
 <script setup lang="ts">
-import Header from './header.vue';
-import Aside from './aside.vue';
-import Breadcrumb from '../components/Breadcrumb.vue';
-
+import Header from "./header.vue";
+import Aside from "./aside.vue";
+import Breadcrumb from "../components/Breadcrumb.vue";
 </script>
 
 <style lang="scss" scoped>

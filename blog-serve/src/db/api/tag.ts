@@ -6,9 +6,7 @@ import { Op } from "sequelize";
 /**
  * @description 新增标签
  */
-export const createTag = (
-    data: Pick<Tag, "content" | "userId" | "reason" | "status" | "remark">
-) => {
+export const createTag = (data: Pick<Tag, "content" | "userId" | "reason" | "status" | "remark">) => {
     return Tag.findOrCreate({
         where: { content: data.content },
         defaults: data,
@@ -30,8 +28,8 @@ export const getTagList = ({
     attributes?: Array<"reason" | "status" | "remark" | "createdAt">;
 }) => {
     return Tag.findAndCountAll({
-        attributes: ["tagId", "content", ...attributes],
         order: [["tagId", "DESC"]],
+        attributes: ["tagId", "content", ...attributes],
         where: {
             status: { [Op.or]: status },
             content: { [Op.like]: content },
@@ -58,5 +56,14 @@ export const getTagListAll = () => {
     return Tag.findAll({
         attributes: ["tagId", "content", "status"],
         where: { status: { [Op.or]: [0, 1] } },
+    });
+};
+
+/**
+ * @description 验证标签是否存在
+ */
+export const isTag = (where: { tagId?: number; content?: string }) => {
+    return Tag.findOne({
+        where,
     });
 };

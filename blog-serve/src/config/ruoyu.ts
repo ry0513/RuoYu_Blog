@@ -1,12 +1,7 @@
 import { ENCRYPT } from "./global";
 import { resolve } from "path";
 import dayjs from "dayjs";
-import {
-    createHmac,
-    createHash,
-    createCipheriv,
-    createDecipheriv,
-} from "crypto";
+import { createHmac, createHash, createCipheriv, createDecipheriv } from "crypto";
 
 import { ResponseFun, BaseFun, EncryptFun } from "../typescript/config/ruoyu";
 import { logger } from "../utils/log";
@@ -27,9 +22,11 @@ const resFun: ResponseFun = {
             data,
         });
     },
+
     resPermission: (res, data = {}) => {
         res.send({ code: -3, msg: "权限不足", data });
     },
+
     resError: (res, data = {}) => {
         res.send({ code: -4, msg: "其他错误", data });
     },
@@ -38,9 +35,7 @@ const resFun: ResponseFun = {
 const encryptFun: EncryptFun = {
     md5Pass: (value, md5Val = ENCRYPT.MD5) => {
         return createHmac("sha256", md5Val)
-            .update(
-                createHmac("sha256", md5Val).update(value).digest("hex") + value
-            )
+            .update(createHmac("sha256", md5Val).update(value).digest("hex") + value)
             .digest("hex");
     },
     md5: (value) => {

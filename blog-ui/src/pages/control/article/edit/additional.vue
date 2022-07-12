@@ -1,23 +1,7 @@
 <template>
-    <t-dialog
-        v-model:visible="show"
-        :closeOnOverlayClick="false"
-        header="对话框标题"
-        :width="getWinWidth > 800 ? 800 : getWinWidth - 20"
-        @confirm="confirm"
-        @close="close"
-    >
-        <t-form
-            label-width="calc(2em + 25px)"
-            ref="articleForm"
-            :data="article"
-        >
-            <t-form-item
-                label="样式"
-                class="column"
-                :rules="[{ required: true, type: 'error' }]"
-                name="type"
-            >
+    <t-dialog v-model:visible="show" :closeOnOverlayClick="false" header="对话框标题" :width="getWinWidth > 800 ? 800 : getWinWidth - 20" @confirm="confirm" @close="close">
+        <t-form label-width="calc(2em + 25px)" ref="articleForm" :data="article">
+            <t-form-item label="样式" class="column" :rules="[{ required: true, type: 'error' }]" name="type">
                 <t-select v-model="article.type" placeholder="请选择样式">
                     <t-option value="0" label="无图"></t-option>
                     <t-option value="1" label="单图" disabled></t-option>
@@ -25,33 +9,11 @@
                     <t-option value="3" label="三图" disabled></t-option>
                 </t-select>
             </t-form-item>
-            <t-form-item
-                label="标签"
-                name="tags"
-                :rules="[{ required: true, type: 'error' }]"
-            >
-                <t-select
-                    v-model="article.tags"
-                    multiple
-                    filterable
-                    :max="3"
-                    :options="tagOptions"
-                    :keys="{ value: 'tagId', label: 'label' }"
-                    placeholder="请输入关键字"
-                />
+            <t-form-item label="标签" name="tags" :rules="[{ required: true, type: 'error' }]">
+                <t-select v-model="article.tags" multiple filterable :max="3" :options="tagOptions" :keys="{ value: 'tagId', label: 'label' }" placeholder="请输入关键字" />
             </t-form-item>
-            <t-form-item
-                label="分类"
-                name="sortId"
-                :rules="[{ required: true, type: 'error' }]"
-            >
-                <t-select
-                    v-model="article.sortId"
-                    :max="3"
-                    :options="sortOptions"
-                    :keys="{ value: 'sortId', label: 'content' }"
-                    placeholder="请选择分类"
-                />
+            <t-form-item label="分类" name="sortId" :rules="[{ required: true, type: 'error' }]">
+                <t-select v-model="article.sortId" :options="sortOptions" :keys="{ value: 'sortId', label: 'content' }" placeholder="请选择分类" />
             </t-form-item>
             <t-form-item
                 label="密码"
@@ -63,10 +25,7 @@
                     },
                 ]"
             >
-                <t-input
-                    v-model="article.passwd"
-                    placeholder="无需密码请不要填写"
-                />
+                <t-input v-model="article.passwd" placeholder="无需密码请不要填写" />
             </t-form-item>
         </t-form>
     </t-dialog>
@@ -87,7 +46,7 @@ const props = defineProps<{
     show: boolean;
     articleData: { title: string; html: string; content: string };
 }>();
-const emits = defineEmits(["additionalClose", "createTagSuccess"]);
+const emits = defineEmits(["additionalClose", "submit"]);
 // 文章属性
 const article = reactive({
     type: "",
@@ -101,9 +60,7 @@ const article = reactive({
 const articleForm = ref();
 
 // 标签选项
-let tagOptions: { tagId: number; content: string; status: number }[] = reactive(
-    []
-);
+let tagOptions: { tagId: number; content: string; status: number }[] = reactive([]);
 
 // 分类选项
 let sortOptions: { sortId: number; content: string }[] = reactive([]);
@@ -117,12 +74,7 @@ getTagListAll().then(({ data }) => {
             content: () => (
                 <div>
                     {item.content}
-                    <t-tag
-                        size="small"
-                        theme="warning"
-                        v-show={item.status === 0}
-                        class="ml-10"
-                    >
+                    <t-tag size="small" theme="warning" v-show={item.status === 0} class="ml-10">
                         审核
                     </t-tag>
                 </div>
@@ -146,26 +98,7 @@ const close = () => {
 const confirm = () => {
     articleForm.value.validate().then((validate: any) => {
         if (validate === true) {
-            console.log({ ...article, ...props.articleData });
-            createArticle({ status: 1, ...article, ...props.articleData }).then(
-                (res) => {
-                    console.log(res);
-                }
-            );
-            // loading.value = true;
-            // createTag(tagData)
-            //     .then(({ data: { title, text } }) => {
-            //         NotifyPlugin.success({
-            //             title: title,
-            //             content: text,
-            //             closeBtn: true,
-            //         });
-            //         emits("createTagSuccess");
-            //         close();
-            //     })
-            //     .catch(() => {
-            //         loading.value = false;
-            //     });
+            emits("submit", article);
         }
     });
 };

@@ -1,24 +1,7 @@
 <template>
     <div class="editor">
-        <Toolbar
-            id="editor-toolbar"
-            :editor="editorRef"
-            :defaultConfig="toolbarConfig"
-        />
-        <Editor
-            style="height: 700px"
-            id="editor-content"
-            v-model="valueHtml"
-            :defaultConfig="editorConfig"
-            @onCreated="onCreated"
-            @onChange="
-                (editor) =>
-                    $emit('onChange', {
-                        html: editor.getHtml(),
-                        content: JSON.stringify(editor.children),
-                    })
-            "
-        />
+        <Toolbar id="editor-toolbar" :editor="editorRef" :defaultConfig="toolbarConfig" />
+        <Editor style="height: 700px" id="editor-content" v-model="valueHtml" :defaultConfig="editorConfig" @onCreated="onCreated" @onChange="onChange" />
     </div>
 </template>
 
@@ -32,7 +15,7 @@ import "@wangeditor/editor/dist/css/style.css";
 
 // 父组件传值
 defineProps<{ valueHtml: string }>();
-defineEmits(["onChange"]);
+const emits = defineEmits(["onChange"]);
 
 // 定义 富文本配置
 const editorRef = shallowRef();
@@ -44,17 +27,7 @@ const editorConfig = {
     MENU_CONF: {
         // 字体
         fontFamily: {
-            fontFamilyList: [
-                "黑体",
-                "仿宋",
-                "楷体",
-                "标楷体",
-                "宋体",
-                "微软雅黑",
-                "Arial",
-                "Tahoma",
-                "Verdana",
-            ],
+            fontFamilyList: ["黑体", "仿宋", "楷体", "标楷体", "宋体", "微软雅黑", "Arial", "Tahoma", "Verdana"],
         },
         codeSelectLang: {
             // 代码语言
@@ -76,6 +49,14 @@ const editorConfig = {
 // 事件 编辑器创建成功
 const onCreated = (editor: IDomEditor) => {
     editorRef.value = editor;
+};
+
+const onChange = (editor: { getHtml: () => any; children: any }) => {
+    const isEmpty = editorRef.value.getText().trim() !== "";
+    emits("onChange", {
+        html: isEmpty ? editor.getHtml() : "",
+        content: isEmpty ? JSON.stringify(editor.children) : "",
+    });
 };
 
 // 组件销毁

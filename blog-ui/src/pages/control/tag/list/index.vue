@@ -3,43 +3,18 @@
         <div class="ry-card-filter">
             <div class="ry-card-filter_options">
                 <span class="label">标签状态:</span>
-                <t-select
-                    v-model="filter.status"
-                    :options="TAG_STATUS_OPTIONS"
-                    clearable
-                    placeholder="请选择标签状态"
-                    @change="getTagListData(true)"
-                />
+                <t-select v-model="filter.status" :options="TAG_STATUS_OPTIONS" clearable placeholder="请选择标签状态" @change="getTagListData(true)" />
             </div>
             <div class="ry-card-filter_options">
                 <span class="label">标签名称:</span>
-                <t-input
-                    v-model="filter.content"
-                    clearable
-                    placeholder="请选择标签名称"
-                    @change="getTagListData(true)"
-                />
+                <t-input v-model="filter.content" clearable placeholder="请输入标签名称" @change="getTagListData(true)" />
             </div>
             <div class="ry-card-filter_right">
-                <t-button
-                    theme="primary"
-                    type="submit"
-                    @click="createTagShow = true"
-                    >新建</t-button
-                >
+                <t-button theme="primary" type="submit" @click="createTagShow = true">新增</t-button>
             </div>
         </div>
 
-        <t-table
-            :data="tableData.rows"
-            :columns="TABLE_COLUMNS"
-            row-key="articleId"
-            hover
-            bordered
-            :loading="tableData.loading !== 0"
-            :pagination="tableData.pagination"
-            @page-change="onPageChange"
-        >
+        <t-table :data="tableData.rows" :columns="TABLE_COLUMNS" row-key="articleId" hover bordered :loading="tableData.loading !== 0" :pagination="tableData.pagination" @page-change="onPageChange">
             <template #count="{ row }">
                 {{ row.articles.length }}
             </template>
@@ -54,18 +29,12 @@
             </template>
 
             <template #op="slotProps">
-                <a class="t-button-link" @click="rehandleClickOp(slotProps)"
-                    >管理</a
-                >
+                <a class="t-button-link" @click="rehandleClickOp(slotProps)">管理</a>
                 <!-- <a class="t-button-link" @click="handleClickDelete(slotProps)">删除</a> -->
             </template>
         </t-table>
     </t-card>
-    <Create
-        :show="createTagShow"
-        @createTagClose="createTagShow = false"
-        @createTagSuccess="getTagListData(true)"
-    />
+    <Create :show="createTagShow" @createTagClose="createTagShow = false" @createTagSuccess="getTagListData(true)" />
 </template>
 
 <script setup lang="ts">
@@ -97,7 +66,7 @@ const tableData = reactive({
 // 表格参数
 const TABLE_COLUMNS = [
     { title: "ID", width: "80", align: "center", colKey: "tagId" },
-    { title: "标签", width: "150", align: "center", colKey: "content" },
+    { title: "标签名称", width: "150", align: "center", colKey: "content" },
     { title: "原因", width: "150", align: "center", colKey: "reason" },
     {
         title: "使用次数",

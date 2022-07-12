@@ -15,9 +15,7 @@ const formatRoute = (list: Array<RouteRecordRaw>): Array<RouteRecordRaw> => {
     return newList;
 };
 
-const formatRouteList = (
-    list: Array<RouteRecordRaw>
-): Array<RouteRecordRaw> => {
+const formatRouteList = (list: Array<RouteRecordRaw>): Array<RouteRecordRaw> => {
     const newList: Array<RouteRecordRaw> = [];
     list.filter((item) => {
         const route: RouteRecordRaw = {
@@ -42,9 +40,7 @@ export default formatRoute;
 export const getPath = (path: string, maxLevel: number) => {
     return path
         .split("/")
-        .filter(
-            (_item: string, index: number) => index <= maxLevel && index > 0
-        )
+        .filter((_item: string, index: number) => index <= maxLevel && index > 0)
         .map((item: string) => `/${item}`)
         .join("");
 };
