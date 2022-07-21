@@ -7,7 +7,7 @@ const router = Router();
 // 获取全部
 router.get("/list/all", async (req, res) => {
     const data = await getSortListAll();
-    RUOYU.resSuccess(res, data);
+    RUOYU.resSuccess(res, { data });
 });
 
 export default router;

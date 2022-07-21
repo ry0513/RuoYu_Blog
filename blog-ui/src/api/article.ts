@@ -3,16 +3,32 @@ import instance from "@/utils/request";
 // 文章相关
 
 // 创建
-export function createArticle(data: { status: number; title: string; html: string; content: string; sortId?: string; tags?: number[]; passwd?: string }) {
+// export function createArticle(data: { status: number; title: string; html: string; content: string; sortId?: number; tags?: number[]; passwd?: string }) {
+//     return instance({
+//         url: "/article",
+//         method: "post",
+//         data,
+//     });
+// }
+
+export function createArticle(data: Article) {
     return instance({
         url: "/article",
         method: "post",
         data,
     });
 }
+// 编辑
+export function updateArticle(data: Article) {
+    return instance({
+        url: "/article",
+        method: "put",
+        data,
+    });
+}
 
 // 编辑时回显
-export function getArticleByEdit(articleId: string) {
+export function getArticleByEdit(articleId: number) {
     return instance({
         url: "/article/control/" + articleId,
         method: "get",

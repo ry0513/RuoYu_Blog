@@ -21,10 +21,10 @@ body {
             display: inline-block;
             width: 5em;
         }
-        .t-select__wrap,
-        .t-input__wrap {
+        .t-input__wrap:not(.t-select-input),
+        .t-select__wrap {
             display: inline-block;
-            width: calc(100% - 5em - 20px);
+            width: calc(100% - 5em);
         }
     }
 }
@@ -37,6 +37,10 @@ body {
             }
             .ry-card-filter_right {
                 margin-left: 10px;
+            }
+            .t-input__wrap:not(.t-select-input),
+            .t-select__wrap {
+                width: calc(100% - 5em - 20px);
             }
         }
     }

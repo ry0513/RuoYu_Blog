@@ -8,27 +8,27 @@ import { logger } from "../utils/log";
 
 const resFun: ResponseFun = {
     resSuccess: (res, data = {}) => {
-        res.send({ code: 0, msg: "操作成功", data });
+        res.send({ code: 0, msg: "操作成功", ...data });
     },
 
     resParameter: (res, data = {}) => {
-        res.send({ code: -1, msg: "请检查参数", data });
+        res.send({ code: -1, msg: "请检查参数", ...data });
     },
 
     resNeedLogin: (res, data = {}) => {
         res.send({
             code: -2,
             msg: "没有找到登录信息，未登录或登录过期",
-            data,
+            ...data,
         });
     },
 
     resPermission: (res, data = {}) => {
-        res.send({ code: -3, msg: "权限不足", data });
+        res.send({ code: -3, msg: "权限不足", ...data });
     },
 
     resError: (res, data = {}) => {
-        res.send({ code: -4, msg: "其他错误", data });
+        res.send({ code: -4, msg: "其他错误", ...data });
     },
 };
 

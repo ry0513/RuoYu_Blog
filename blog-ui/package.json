@@ -8,15 +8,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@wangeditor/editor": "^5.0.1",
-    "@wangeditor/editor-for-vue": "^5.1.11",
+    "@wangeditor/editor": "^5.1.11",
+    "@wangeditor/editor-for-vue": "^5.1.12",
     "axios": "^0.27.2",
     "dayjs": "^1.11.2",
     "lodash": "^4.17.21",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.14",
     "qs": "^6.10.3",
-    "tdesign-vue-next": "^0.15.4",
+    "tdesign-vue-next": "^0.17.5",
     "vue": "^3.2.25",
     "vue-router": "^4.0.15"
   },

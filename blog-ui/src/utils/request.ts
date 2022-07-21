@@ -21,9 +21,7 @@ instance.interceptors.request.use(async (config) => {
 
     await (() => {
         return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(true);
-            }, 1000);
+            resolve(true);
         });
     })();
     return config;
@@ -33,16 +31,14 @@ instance.interceptors.response.use(
     (response) => {
         const { data } = response;
         if (data.code === 0) {
-            return data;
-        } else if (data.code === -2 && data.data.hint !== false) {
+            return response;
+        } else if (data.code === -2 && data.hint !== false) {
             const confirmDia = DialogPlugin.confirm({
                 header: "提示",
                 body: data.msg,
                 confirmBtn: "重新登录",
                 onConfirm: async () => {
-                    window.location.href = `${ACCTOUNT_URL}?path=${encodeURIComponent(
-                        window.location.href
-                    )}`;
+                    window.location.href = `${ACCTOUNT_URL}?path=${encodeURIComponent(window.location.href)}`;
                 },
                 onClose: () => {
                     confirmDia.hide && confirmDia.hide();
@@ -50,13 +46,13 @@ instance.interceptors.response.use(
             });
         } else if ([-3, -4].includes(data.code)) {
             NotifyPlugin.error({
-                title: data.data.title || "操作失败",
-                content: data.data.text || data.msg,
+                title: data.title || "操作失败",
+                content: data.msg,
                 closeBtn: true,
             });
         }
 
-        return Promise.reject(new Error(data.msg));
+        return Promise.reject(new Error(data));
     },
     async (err) => {
         const { config } = err;

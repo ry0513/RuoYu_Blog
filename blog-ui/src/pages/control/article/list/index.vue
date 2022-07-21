@@ -11,10 +11,7 @@
             </div>
             <div class="ry-card-filter_options">
                 <span class="label">文章名称:</span>
-                <t-input v-model="filter.content" clearable placeholder="请输入文章名称" @change="getArticleListData(true)" />
-            </div>
-            <div class="ry-card-filter_right">
-                <t-button theme="primary" type="submit">新增</t-button>
+                <t-input v-model="filter.content" clearable placeholder="请输入文章名称" @enter="getArticleListData(true)" />
             </div>
         </div>
 
@@ -27,29 +24,28 @@
                     {{ getOptionsLabel(ARTICLE_STATUS_OPTIONS, row.status) }}
                 </template>
                 <template #tags="{ row }">
-                    <t-tag theme="primary" class="tags" variant="light" v-for="(item, index) in row.tags" :key="index">
-                        {{ item.content }}
-                    </t-tag>
+                    <t-space break-line size="small">
+                        <t-tag theme="primary" class="tags" variant="light" v-for="(item, index) in row.tags" :key="index">
+                            {{ item.content }}
+                        </t-tag>
+                    </t-space>
                 </template>
                 <template #password="{ row }">
-                    {{ row.password || "无需密码" }}
+                    {{ row.password || "-" }}
                 </template>
                 <template #releaseAt="{ row }">
-                    {{ row.releaseAt || "未发布过" }}
+                    {{ row.releaseAt || "-" }}
                 </template>
-                <template #op="slotProps">
-                    <t-button variant="text" theme="success" @click="go(`/control/article/edit`)"> 编辑 </t-button>
-
-                    <!-- <a class="t-button-link" @click="handleClickDelete(slotProps)">删除</a> -->
+                <template #op="{ row }">
+                    <t-space break-line size="small">
+                        <t-button @click="go(`/control/article/edit?articleId=${row.articleId}`)" shape="square" variant="text">
+                            <template #icon>
+                                <t-icon name="edit-1" />
+                            </template>
+                        </t-button>
+                    </t-space>
                 </template>
             </t-table>
-            <!-- <t-dialog
-        v-model:visible="confirmVisible"
-        header="确认删除当前所选合同？"
-        :body="confirmBody"
-        :on-cancel="onCancel"
-        @confirm="onConfirmDelete"
-      /> -->
         </div>
     </t-card>
 </template>
@@ -58,7 +54,6 @@
 import { computed, onMounted, reactive, ref } from "vue";
 import { ARTICLE_STATUS_OPTIONS, getOptionsLabel } from "@/options/index";
 import { getSortListAll } from "@/api/sort";
-import debounce from "lodash/debounce";
 import pagination from "@/utils/pagination";
 import { getArticleList } from "@/api/article";
 import router from "@/router";
@@ -72,19 +67,20 @@ const filter = reactive({
 
 // 表格参数
 const TABLE_COLUMNS = [
-    { title: "ID", width: "100", align: "center", colKey: "articleId" },
-    { title: "分类", width: "100", colKey: "sort" },
-    { title: "标题", Width: "150", colKey: "title" },
-    { title: "状态", width: "100", colKey: "status", cell: { col: "status" } },
-    { title: "标签", width: "200", colKey: "tags", cell: { col: "tags" } },
+    { title: "ID", align: "center", width: "100", colKey: "articleId" },
+    { title: "分类", align: "center", width: "100", colKey: "sort" },
+    { title: "标题", align: "center", width: "200", colKey: "title" },
+    { title: "状态", align: "center", width: "100", colKey: "status", cell: { col: "status" } },
+    { title: "标签", align: "center", width: "200", colKey: "tags", cell: { col: "tags" } },
     {
         title: "密码",
+        align: "center",
         width: "150",
         colKey: "password",
         cell: { col: "password" },
     },
-    { title: "发布时间", width: "200", colKey: "releaseAt", cell: { col: "releaseAt" } },
-    { align: "left", width: "200", colKey: "op", title: "操作" },
+    { title: "发布时间", align: "center", width: "200", colKey: "releaseAt", cell: { col: "releaseAt" } },
+    { align: "center", width: "100", colKey: "op", title: "操作" },
 ];
 
 // 表格数据
@@ -99,7 +95,7 @@ const onPageChange = (pageInfo: pageChangeInfo) => {
     getArticleListData();
 };
 // 请求表格数据
-const getArticleListData = debounce((first = false) => {
+const getArticleListData = (first = false) => {
     if (first) {
         tableData.pagination.current = 1;
     }
@@ -107,37 +103,24 @@ const getArticleListData = debounce((first = false) => {
     const { current, pageSize } = tableData.pagination;
     getArticleList({ ...filter, current, pageSize }).then(({ data }) => {
         console.log(data);
+        console.log(45445);
         tableData.rows = data.rows;
         tableData.loading--;
         tableData.pagination.total = data.count;
     });
-}, 500);
-
+};
+getArticleListData();
 // 分类选项
 let sortOptions: { sortId: number; content: string }[] = reactive([]);
 
 // 请求分类数据
 getSortListAll().then(({ data }) => {
-    sortOptions.push(...data);
-});
-
-// 加载后
-onMounted(() => {
-    getArticleListData();
+    sortOptions.push(...data.data);
 });
 
 // 跳转
 const go = (path: string) => {
-    console.log(path);
-    router.replace(path);
+    router.push(path);
 };
 </script>
-<style lang="scss" scoped>
-.form-item-content {
-    width: 200px;
-}
-
-.tags {
-    margin-right: 10px;
-}
-</style>
+<style lang="scss" scoped></style>

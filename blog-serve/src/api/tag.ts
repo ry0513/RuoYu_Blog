@@ -40,7 +40,7 @@ router.get(
 // 获取全部
 router.get("/list/all", async (req, res) => {
     const data = await getTagListAll();
-    RUOYU.resSuccess(res, data);
+    RUOYU.resSuccess(res, { data });
 });
 
 // 新增
@@ -75,7 +75,7 @@ router.post(
                 text: `当前状态：${tag.status === 0 ? "等待审核" : "正常使用"}`,
             });
         } else {
-            RUOYU.resError(res, { title: "新建失败", text: "标签已存在" });
+            RUOYU.resError(res, { title: "新建失败", msg: "标签已存在" });
         }
     }
 );

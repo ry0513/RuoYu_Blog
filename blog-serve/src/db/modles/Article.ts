@@ -1,15 +1,4 @@
-import {
-    Table,
-    Model,
-    PrimaryKey,
-    Column,
-    DataType,
-    AutoIncrement,
-    ForeignKey,
-    BelongsToMany,
-    Default,
-    BelongsTo,
-} from "sequelize-typescript";
+import { Table, Model, PrimaryKey, Column, DataType, AutoIncrement, ForeignKey, BelongsToMany, Default, BelongsTo } from "sequelize-typescript";
 import User from "./User";
 // import TagArticle from "./TagArticle";
 import Tag from "./Tag";
@@ -46,16 +35,12 @@ export default class Article extends Model {
     @Column({ type: DataType.TEXT, comment: "HTML" })
     html!: string;
 
+    @Default("")
     @Column({ type: DataType.TEXT, comment: "前言" })
     foreword!: string;
 
     @Column({ type: DataType.TEXT, comment: "内容" })
-    set content(val: Array<object>) {
-        this.setDataValue("content", JSON.stringify(val));
-    }
-    get content(): Array<object> {
-        return JSON.parse(this.getDataValue("content") || "[{}]");
-    }
+    content!: string;
 
     @Column({
         type: DataType.INTEGER,
@@ -83,6 +68,7 @@ export default class Article extends Model {
     })
     status!: number;
 
+    @Default("")
     @Column({ type: DataType.STRING, comment: "密码" })
     password!: string;
 

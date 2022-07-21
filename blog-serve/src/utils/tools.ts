@@ -6,17 +6,18 @@ import UAParser from "ua-parser-js";
 import { load } from "cheerio";
 import Prism from "prismjs";
 import loadLanguages from "prismjs/components/";
-const Languages = [
-    "javascript",
-    "typescript",
-    "css",
-    "html",
-    "java",
-    "php",
-    "sql",
-    "bash",
-];
+const Languages = ["javascript", "typescript", "css", "html", "java", "php", "sql", "bash"];
 loadLanguages(Languages);
+
+/**
+ * @description 对象数组取出来ID数组
+ */
+export const toId = (obj: any, attr1: string, attr2: string) => {
+    obj[attr1] = obj[attr1].map((item: any) => {
+        return item[attr2];
+    });
+    return obj;
+};
 
 /**
  * @description 获取IP
@@ -77,11 +78,7 @@ export const toString = (
         return def || false;
     } else if (typeof val === "string") {
         const str = val.toString();
-        if (
-            (maxLength && maxLength < str.length) ||
-            (minLength && minLength > str.length) ||
-            (scope && !scope.includes(str))
-        ) {
+        if ((maxLength && maxLength < str.length) || (minLength && minLength > str.length) || (scope && !scope.includes(str))) {
             return false;
         }
         return str;
@@ -92,24 +89,12 @@ export const toString = (
 /**
  * @description 验证是否为正整数并转为数字
  */
-export const toPInt = (
-    val: unknown,
-    {
-        max,
-        min,
-        def,
-        scope,
-    }: { max?: number; min?: number; def?: number; scope?: Array<number> } = {}
-): number | false => {
+export const toPInt = (val: unknown, { max, min, def, scope }: { max?: number; min?: number; def?: number; scope?: Array<number> } = {}): number | false => {
     if (val === undefined) {
         return def || false;
     } else if (/^[0-9]+$/.test(val as string)) {
         const num = parseInt(val as string);
-        if (
-            (max && max < num) ||
-            (min && min > num) ||
-            (scope && !scope.includes(num))
-        ) {
+        if ((max && max < num) || (min && min > num) || (scope && !scope.includes(num))) {
             return false;
         }
         return num;
@@ -143,12 +128,7 @@ export const toArray = (
             return (
                 (val.every((item) => {
                     item;
-                    if (
-                        !/^[0-9]+$/.test(item as string) ||
-                        (max && max < item) ||
-                        (min && min > item) ||
-                        (scope && !scope.includes(item))
-                    ) {
+                    if (!/^[0-9]+$/.test(item as string) || (max && max < item) || (min && min > item) || (scope && !scope.includes(item))) {
                         return false;
                     }
                     return true;
@@ -161,12 +141,7 @@ export const toArray = (
         } else if (type === "string") {
             return (
                 (val.every((item) => {
-                    if (
-                        typeof item !== "string" ||
-                        (max && max < item.length) ||
-                        (min && min > item.length) ||
-                        (scope && !scope.includes(item))
-                    ) {
+                    if (typeof item !== "string" || (max && max < item.length) || (min && min > item.length) || (scope && !scope.includes(item))) {
                         return false;
                     }
                     return true;
@@ -194,13 +169,9 @@ export const toDate = (val: string, date?: string) => {
 /**
  * @description 格式化UA数据
  */
-export const getUa = (
-    ua = ""
-): { ua: string; os: string; browser: string; device: string | null } => {
+export const getUa = (ua = ""): { ua: string; os: string; browser: string; device: string | null } => {
     const uaInfo = UAParser(ua);
-    const browser = `${uaInfo.browser.name} ${
-        uaInfo.browser.version || ""
-    }`.trim();
+    const browser = `${uaInfo.browser.name} ${uaInfo.browser.version || ""}`.trim();
     const os = `${uaInfo.os.name} ${uaInfo.os.version || ""}`.trim();
     const device = uaInfo.device.model || null;
     return { ua, os, browser, device };
@@ -209,11 +180,7 @@ export const getUa = (
 /**
  * @description 格式化数据
  */
-export const formatParam = (
-    val: string | number | false | Array<string | number>,
-    param: { [key: string]: string | number | Array<string | number> },
-    key: string
-): void => {
+export const formatParam = (val: string | number | false | Array<string | number>, param: { [key: string]: string | number | Array<string | number> }, key: string): void => {
     if (val !== false) param[key] = val;
 };
 
@@ -240,11 +207,7 @@ export const formatCode = (html: string): string => {
             if (lang === "text") {
                 $(ele).addClass(`language-${lang}`);
             } else if (Languages.indexOf(lang) !== -1) {
-                code = Prism.highlight(
-                    code.replace(/&lt;/g, "<").replace(/&gt;/g, ">"),
-                    Prism.languages[lang],
-                    lang
-                );
+                code = Prism.highlight(code.replace(/&lt;/g, "<").replace(/&gt;/g, ">"), Prism.languages[lang], lang);
             }
             $(ele).html(code + getLine(code));
             $(ele)
@@ -252,9 +215,7 @@ export const formatCode = (html: string): string => {
                 .addClass(`line-numbers ${$(ele).attr("class")}`);
             $(ele)
                 .parent()
-                .wrap(
-                    `<div  class='${$(ele).attr("class")}' lang=${lang}></div>`
-                );
+                .wrap(`<div  class='${$(ele).attr("class")}' lang=${lang}></div>`);
         }
         // if (code && lang === undefined) {
         //     $(ele).html(code + getLine(code));

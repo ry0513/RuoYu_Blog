@@ -49,6 +49,7 @@ const editorConfig = {
 // 事件 编辑器创建成功
 const onCreated = (editor: IDomEditor) => {
     editorRef.value = editor;
+    console.log(editor);
 };
 
 const onChange = (editor: { getHtml: () => any; children: any }) => {

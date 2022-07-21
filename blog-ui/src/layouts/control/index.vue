@@ -5,11 +5,11 @@
             <Aside class="control-height" style="flex: 0 0 auto" />
             <t-content class="control-height control-main">
                 <Breadcrumb />
-                <router-view />
+                <router-view :key="$route.name" />
             </t-content>
         </t-layout>
     </t-layout>
-    <router-view v-else />
+    <router-view v-else :key="$route.name" />
 </template>
 <script setup lang="ts">
 import Header from "./header.vue";

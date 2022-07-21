@@ -30,3 +30,12 @@ export const getSortListAll = () => {
         ],
     });
 };
+
+/**
+ * @description 验证分类是否存在
+ */
+export const isSort = (where: { sortId?: number; content?: string }) => {
+    return Sort.findOne({
+        where,
+    });
+};

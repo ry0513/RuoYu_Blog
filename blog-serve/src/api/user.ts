@@ -67,12 +67,23 @@ router.get("/userInfo", login({ hint: false }), async (req, res) => {
                             },
                         },
                         {
-                            path: "edit",
-                            name: "controlArticleEdit",
+                            path: "add",
+                            name: "controlArticleAdd",
                             component: "pages/control/article/edit/index",
                             meta: {
                                 title: "新增文章",
                                 icon: "",
+                                // full: true,
+                            },
+                        },
+                        {
+                            path: "edit",
+                            name: "controlArticleEdit",
+                            component: "pages/control/article/edit/index",
+                            meta: {
+                                title: "编辑文章",
+                                icon: "",
+                                hidden: true,
                                 // full: true,
                             },
                         },

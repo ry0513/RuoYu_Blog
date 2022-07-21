@@ -3,10 +3,10 @@
         <t-form label-width="calc(2em + 25px)" ref="articleForm" :data="article">
             <t-form-item label="样式" class="column" :rules="[{ required: true, type: 'error' }]" name="type">
                 <t-select v-model="article.type" placeholder="请选择样式">
-                    <t-option value="0" label="无图"></t-option>
-                    <t-option value="1" label="单图" disabled></t-option>
-                    <t-option value="2" label="两图" disabled></t-option>
-                    <t-option value="3" label="三图" disabled></t-option>
+                    <t-option :value="0" label="无图"></t-option>
+                    <t-option :value="1" label="单图" disabled></t-option>
+                    <t-option :value="2" label="两图" disabled></t-option>
+                    <t-option :value="3" label="三图" disabled></t-option>
                 </t-select>
             </t-form-item>
             <t-form-item label="标签" name="tags" :rules="[{ required: true, type: 'error' }]">
@@ -17,7 +17,7 @@
             </t-form-item>
             <t-form-item
                 label="密码"
-                name="passwd"
+                name="password"
                 :rules="[
                     {
                         pattern: /^[A-Za-z0-9]{0,10}$/,
@@ -25,7 +25,7 @@
                     },
                 ]"
             >
-                <t-input v-model="article.passwd" placeholder="无需密码请不要填写" />
+                <t-input v-model="article.password" placeholder="无需密码请不要填写" />
             </t-form-item>
         </t-form>
     </t-dialog>
@@ -44,17 +44,11 @@ const { getWinWidth } = storeToRefs(store);
 
 const props = defineProps<{
     show: boolean;
-    articleData: { title: string; html: string; content: string };
+    article: Article;
 }>();
 const emits = defineEmits(["additionalClose", "submit"]);
-// 文章属性
-const article = reactive({
-    type: "",
-    tags: [],
-    html: "",
-    sortId: "",
-    passwd: "",
-});
+
+// console.log(props.articleData.type);
 
 // 表单元素
 const articleForm = ref();
@@ -68,7 +62,7 @@ let sortOptions: { sortId: number; content: string }[] = reactive([]);
 // 获取标签数据
 getTagListAll().then(({ data }) => {
     tagOptions.push(
-        ...data.map((item: { status: number; content: string }) => ({
+        ...data.data.map((item: { status: number; content: string }) => ({
             ...item,
             label: item.content,
             content: () => (
@@ -85,7 +79,7 @@ getTagListAll().then(({ data }) => {
 
 // 获取分类数据
 getSortListAll().then(({ data }) => {
-    sortOptions.push(...data);
+    sortOptions.push(...data.data);
 });
 
 // 关闭事件
@@ -98,14 +92,9 @@ const close = () => {
 const confirm = () => {
     articleForm.value.validate().then((validate: any) => {
         if (validate === true) {
-            emits("submit", article);
+            emits("submit");
         }
     });
-};
-
-//*********************************************** */
-const t = () => {
-    console.log(article);
 };
 </script>
 

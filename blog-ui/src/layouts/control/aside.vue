@@ -25,8 +25,6 @@ const expanded = [getPath(useRoute().path, 2)];
 
 // 计算属性 当前激活的菜单
 const active = computed(() => {
-    console.log(4444);
-    console.log(getPath(useRoute().path, 10));
     return getPath(useRoute().path, 10);
 });
 </script>

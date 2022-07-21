@@ -7,7 +7,6 @@ import { Op } from "sequelize";
 /**
  * @description 获取文章列表
  */
-
 export const getArticleList = ({
     where: { status = [], content = [], sortId = [] } = {},
     attributes = [],
@@ -57,15 +56,41 @@ export const createArticle = (data: {
     userId: number;
     title: string;
     html: string;
-    content: Array<object>;
+    content: string;
     sortId?: number;
     images?: Array<string>;
-    passwd?: string;
+    password?: string;
     status?: number;
     releaseAt?: Date;
     type?: number;
 }) => {
     return Article.create(data);
+};
+
+/**
+ * @description 编辑文章
+ */
+export const updateArticle = ({
+    articleId,
+    ...data
+}: {
+    articleId: number;
+    userId?: number;
+    title: string;
+    html: string;
+    content: string;
+    sortId?: number;
+    images?: Array<string>;
+    password?: string;
+    status?: number;
+    releaseAt?: Date;
+    type?: number;
+}) => {
+    return Article.update(data, {
+        where: {
+            articleId,
+        },
+    });
 };
 
 /**
@@ -92,4 +117,24 @@ export const getArticle = (where: { articleId: number; userId?: number; status?:
  */
 export const addTagArticle = (data: { tagId: number; articleId: number }) => {
     return TagArticle.create(data);
+};
+
+/**
+ * @description 删除标签文章对应关系
+ */
+export const delTagArticleByArticleId = (articleId: number) => {
+    return TagArticle.destroy({
+        where: {
+            articleId,
+        },
+    });
+};
+
+/**
+ * @description 验证标签是否存在
+ */
+export const isArticle = (where: { articleId?: number; userId?: number }) => {
+    return Article.findOne({
+        where,
+    });
 };

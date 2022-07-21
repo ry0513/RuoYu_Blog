@@ -30,13 +30,7 @@
             </div>
         </div> -->
 
-        <t-table
-            :data="tableData.rows"
-            :columns="TABLE_COLUMNS"
-            row-key="sortId"
-            bordered
-            :loading="tableData.loading !== 0"
-        >
+        <t-table :data="tableData.rows" :columns="TABLE_COLUMNS" row-key="sortId" bordered :loading="tableData.loading !== 0">
             <template #count="{ row }">
                 {{ row.articles.length }}
             </template>
@@ -99,8 +93,7 @@ const TABLE_COLUMNS = [
 const getSortListData = (first = false) => {
     tableData.loading++;
     getSortListAll().then(({ data }) => {
-        console.log(data);
-        tableData.rows = data;
+        tableData.rows = data.data;
         tableData.loading--;
     });
 };

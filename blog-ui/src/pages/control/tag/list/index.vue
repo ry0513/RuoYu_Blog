@@ -7,14 +7,14 @@
             </div>
             <div class="ry-card-filter_options">
                 <span class="label">标签名称:</span>
-                <t-input v-model="filter.content" clearable placeholder="请输入标签名称" @change="getTagListData(true)" />
+                <t-input v-model="filter.content" clearable placeholder="请输入标签名称" @enter="getTagListData(true)" />
             </div>
             <div class="ry-card-filter_right">
                 <t-button theme="primary" type="submit" @click="createTagShow = true">新增</t-button>
             </div>
         </div>
 
-        <t-table :data="tableData.rows" :columns="TABLE_COLUMNS" row-key="articleId" hover bordered :loading="tableData.loading !== 0" :pagination="tableData.pagination" @page-change="onPageChange">
+        <t-table :data="tableData.rows" :columns="TABLE_COLUMNS" row-key="tagId" hover bordered :loading="tableData.loading !== 0" :pagination="tableData.pagination" @page-change="onPageChange">
             <template #count="{ row }">
                 {{ row.articles.length }}
             </template>
@@ -29,7 +29,7 @@
             </template>
 
             <template #op="slotProps">
-                <a class="t-button-link" @click="rehandleClickOp(slotProps)">管理</a>
+                <!-- <a class="t-button-link" @click="rehandleClickOp(slotProps)">管理</a> -->
                 <!-- <a class="t-button-link" @click="handleClickDelete(slotProps)">删除</a> -->
             </template>
         </t-table>
@@ -43,8 +43,6 @@ import { TAG_STATUS_OPTIONS, getOptionsLabel } from "@/options/index";
 import { toDate } from "@/utils/date";
 import { getTagList } from "@/api/tag";
 import pagination from "@/utils/pagination";
-
-import debounce from "lodash/debounce";
 
 // 子组件-创建标签
 import Create from "@/components/tagCreate/index.vue";
@@ -106,7 +104,7 @@ const TABLE_COLUMNS = [
 ];
 
 // 请求表格数据
-const getTagListData = debounce((first = false) => {
+const getTagListData = (first = false) => {
     if (first) {
         tableData.pagination.current = 1;
     }
@@ -117,7 +115,7 @@ const getTagListData = debounce((first = false) => {
         tableData.loading--;
         tableData.pagination.total = data.count;
     });
-}, 500);
+};
 
 // 表格页数变化
 const onPageChange = (pageInfo: pageChangeInfo) => {
@@ -133,4 +131,8 @@ const rehandleClickOp = ({ text, row }: { text: any; row: any }) => {
 onMounted(() => {
     getTagListData();
 });
+
+const sss = () => {
+    console.log(555);
+};
 </script>
